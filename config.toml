@@ -11,6 +11,7 @@ theme = "minimal-bootstrap-hugo-theme"
 
 [params]
   description = "Some description"
+  disqusShortname = "dytes"
   contentBackgroundColor = "#fff"
   contentTextColor = "#212529"
   contentLinkColor = "#007bff"
