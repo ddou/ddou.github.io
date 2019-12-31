@@ -2,6 +2,8 @@ baseURL = "https://ddou.github.io"
 languageCode = "en-us"
 title = "子不语"
 theme = "minimal-bootstrap-hugo-theme"
+enableRobotsTXT = true
+canonifyURLs = true
 
 [taxonomies]
   tag = "tags"
