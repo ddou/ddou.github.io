@@ -1,7 +1,7 @@
 baseURL = "https://ddou.github.io"
 languageCode = "en-us"
 title = "子不语"
-theme = "minimal-bootstrap-hugo-theme"
+theme = "contrast-hugo"
 enableRobotsTXT = true
 canonifyURLs = true
 
