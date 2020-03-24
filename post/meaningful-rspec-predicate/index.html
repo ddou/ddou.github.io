@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<title>RSpec优雅验证之Predicate Matcher | Hugo 主题 MemE</title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.67.1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="http://localhost:1313/css/index.css">
+<link rel="stylesheet" href="http://localhost:1313/css/classes.css">
+<link rel="canonical" href="http://localhost:1313/post/meaningful-rspec-predicate/">
+<link rel="alternate" type="application/rss+xml" href="" title="Hugo 主题 MemE">
+
+<body>
+
+<header class="icons">
+  
+    <a href="http://localhost:1313/">Hugo 主题 MemE</a>
+  
+  
+    <nav>
+    
+      <a href="/posts/" >
+        
+          文章
+        
+      </a>
+    
+      <a href="/categories/" >
+        
+          分类
+        
+      </a>
+    
+      <a href="/tags/" >
+        
+          标签
+        
+      </a>
+    
+      <a href="/about/" >
+        
+          关于
+        
+      </a>
+    
+      <a href="" >
+        
+          
+        
+      </a>
+    
+      <a href="" >
+        
+          
+        
+      </a>
+    
+    </nav>
+  
+  
+</header>
+
+<article>
+  <header>
+    <h1>RSpec优雅验证之Predicate Matcher</h1>
+    <time datetime="2014-03-08T22:44:00&#43;08:00">March 08, 2014</time>
+  </header>
+  <p>Ruby作为动态语言，以其灵活性在测试领域大放异彩。RSpec作为Ruby中使用最广泛的测试工具之一，实在是广大码农们居家旅行测试验证之必备神器。RSpec提供了强大灵活的验证器(mather)，使用这些验证器加上Ruby灵活的语法可以写出类似于自然语言的验证，例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby">    <span class="n">result_list</span><span class="o">.</span><span class="n">should</span> <span class="kp">include</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="n">result</span><span class="o">.</span><span class="n">should</span> <span class="n">equal</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="n">person</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="s1">&#39;ddou&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述验证写法自然看起来赏心悦目，但如下的写法就太不ruby了，估计rubyist看到了多少会有些反胃：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby">    <span class="n">person</span><span class="o">.</span><span class="n">manager?</span><span class="o">.</span><span class="n">should</span> <span class="n">be_true</span>
+
+    <span class="n">detail_view</span><span class="o">.</span><span class="n">toggleable?</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="kp">true</span>
+
+    <span class="n">detail_view</span><span class="o">.</span><span class="n">has_photo?</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="kp">true</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>对于上述验证，一个rubyist所喜闻乐见的验证写法应该是这样的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby">    <span class="n">person</span><span class="o">.</span><span class="n">should</span> <span class="n">be_manager</span>
+
+    <span class="n">detail_view</span><span class="o">.</span><span class="n">should</span> <span class="n">be_toggleable</span>
+
+    <span class="n">detail_view</span><span class="o">.</span><span class="n">should</span> <span class="n">have_photo</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这样的写法是不是看起来更自然，更符合人类自然语言的习惯？强大如RSpec者自然支持上述语法。RSpec提供了对Predicate Matcher的支持，即可以使用被验证对象自身提供的predicate方法作为验证器。 常见的predicate方法如Array.empty?，以及我们上面例子中的
+Person.manager?，DetailView.toggleable?，DetailView.has_photo?等。</p>
+<h4 id="predicate-matcher实现">Predicate Matcher实现</h4>
+<p>下面我们就打开RSpec源码，看看Predicate Matcher是如何实现。</p>
+<p>上例中我们并没有定义be_manager，be_toggleable方法，RSpec自然要依赖Ruby的强大元编程能力来实现魔法。打开rspec-expectation包下lib/rspec/matchers/method_missing.rb文件，我们可以看到如下逻辑：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby">    <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+        <span class="k">return</span> <span class="no">Matchers</span><span class="o">::</span><span class="no">BuiltIn</span><span class="o">::</span><span class="no">BePredicate</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span> <span class="k">if</span> <span class="nb">method</span><span class="o">.</span><span class="n">to_s</span> <span class="o">=~</span> <span class="sr">/^be_/</span>
+        <span class="k">return</span> <span class="no">Matchers</span><span class="o">::</span><span class="no">BuiltIn</span><span class="o">::</span><span class="no">Has</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span> <span class="k">if</span> <span class="nb">method</span><span class="o">.</span><span class="n">to_s</span> <span class="o">=~</span> <span class="sr">/^have_/</span>
+        <span class="k">super</span>
+    <span class="k">end</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>以上例中be_manager为例，此情况下RSpec会创建一个Matchers::BuiltIn::BePredicate实例，should会使用该BePredicate来验证我们的期望值。下面我们顺藤摸瓜看下BePredicate是如何工作的：</p>
+<ul>
+<li>解析出验证使用的Predicate方法的名字，$3返回即是。对于上例中be_manager，此处返回&quot;manager&quot;。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby">    <span class="k">def</span> <span class="nf">prefix_and_expected</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
+      <span class="n">symbol</span><span class="o">.</span><span class="n">to_s</span> <span class="o">=~</span> <span class="sr">/^(be_(an?_)?)(.*)/</span>
+      <span class="k">return</span> <span class="vg">$1</span><span class="p">,</span> <span class="vg">$3</span>
+    <span class="k">end</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>将上述方法名字转化为实际使用的Predicate方法对应的符号（Symbol）。根据时态的不同，还会在Predicate方法名后添加s。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby">    <span class="k">def</span> <span class="nf">predicate</span>
+        <span class="s2">&#34;</span><span class="si">#{</span><span class="vi">@expected</span><span class="si">}</span><span class="s2">?&#34;</span><span class="o">.</span><span class="n">to_sym</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">present_tense_predicate</span>
+        <span class="s2">&#34;</span><span class="si">#{</span><span class="vi">@expected</span><span class="si">}</span><span class="s2">s?&#34;</span><span class="o">.</span><span class="n">to_sym</span>
+    <span class="k">end</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>调用上述方法，验证结果。从具体matches方法的实现来看， RSpec会首先尝试不加s的Predicate方法，如果失败才会继续尝试加s的方法。所以，我们的例子中，be_manager会首先使用manager？方法验证，如果失败会继续使用managers？方法验证。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby">    <span class="k">def</span> <span class="nf">matches?</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span>
+        <span class="vi">@actual</span> <span class="o">=</span> <span class="n">actual</span>
+        <span class="k">begin</span>
+            <span class="k">return</span> <span class="vi">@result</span> <span class="o">=</span> <span class="n">actual</span><span class="o">.</span><span class="n">__send__</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="o">*</span><span class="vi">@args</span><span class="p">,</span> <span class="o">&amp;</span><span class="vi">@block</span><span class="p">)</span>
+        <span class="k">rescue</span> <span class="no">NameError</span> <span class="o">=&gt;</span> <span class="n">predicate_missing_error</span>
+            <span class="s2">&#34;this needs to be here or rcov will not count this branch even though it&#39;s executed in a code example&#34;</span>
+        <span class="k">end</span>
+
+        <span class="k">begin</span>
+            <span class="k">return</span> <span class="vi">@result</span> <span class="o">=</span> <span class="n">actual</span><span class="o">.</span><span class="n">__send__</span><span class="p">(</span><span class="n">present_tense_predicate</span><span class="p">,</span> <span class="o">*</span><span class="vi">@args</span><span class="p">,</span> <span class="o">&amp;</span><span class="vi">@block</span><span class="p">)</span>
+        <span class="k">rescue</span> <span class="no">NameError</span>
+            <span class="k">raise</span> <span class="n">predicate_missing_error</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>HasPredicate的实现与BePredicate类似，此处不再累述。</p>
+<p>到此，我们就了解了为什么下面这样的验证能正常工作了：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby">    <span class="n">person</span><span class="o">.</span><span class="n">should</span> <span class="n">be_manager</span>
+
+    <span class="n">detail_view</span><span class="o">.</span><span class="n">should</span> <span class="n">be_toggleable</span>
+
+    <span class="n">detail_view</span><span class="o">.</span><span class="n">should</span> <span class="n">have_photo</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>既然了解了RSpec的Predicate Matcher功能，你还会写出本文初列出的那种non-ruby的验证代码吗？</p>
+
+</article>
+
+
+
+<script src="/livereload.js?port=1313&mindelay=10&v=2" data-no-instant defer></script></body>
+
+</html>

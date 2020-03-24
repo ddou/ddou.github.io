@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<title>你应该知道的Gmail | 子不语</title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.67.1" />
+<meta name="description" content="Some description">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://ddou.github.iocss/index.css">
+<link rel="stylesheet" href="https://ddou.github.iocss/classes.css">
+<link rel="canonical" href="https://ddou.github.io/posts/the-gmail-feature-you-should-know/">
+<link rel="alternate" type="application/rss+xml" href="" title="子不语">
+
+<body>
+
+<header class="icons">
+  
+    <a href="https://ddou.github.io">子不语</a>
+  
+  
+    <nav>
+    
+      <a href="https://ddou.github.io/" >
+        
+          文章
+        
+      </a>
+    
+      <a href="https://ddou.github.io/tags/" >
+        
+          标签
+        
+      </a>
+    
+      <a href="https://ddou.github.io/about/" >
+        
+          关于
+        
+      </a>
+    
+      <a href="https://ddou.github.io/index.xml" >
+        
+          订阅
+        
+      </a>
+    
+    </nav>
+  
+  
+    <div class="hidden description">Some description</div>
+  
+</header>
+
+<article>
+  <header>
+    <h1>你应该知道的Gmail</h1>
+    <time
+      datetime="2015-12-20T00:01:32&#43;08:00">December 20, 2015</time>
+      
+
+<small><code><a href="https://ddou.github.io/tags/efficiency">Efficiency</a></code></small>
+
+  </header>
+  <p>平日工作都是使用 Gmail 作为主力邮箱。虽然网页版因为要频繁登录，而多有不便，但在尝试了多种邮件客户端后，终究还是因为怀念 Gmail 网页版的强大功能，继续使用网页版。趁这个周末忙里偷得半日闲，暂且记录下自己在使用 Gmail 时的一些心得。</p>
+<h3 id="标签-label">标签 Label</h3>
+<p>标签功能在不少邮箱产品中都支持，比如 Outlook，QQ Mail 等。使用标签功能，可以很方便的对邮件进行分类。Gmail 中的标签可以在左侧列表中显示，这样就可以很方便的通过点击相应标签，找到对应的邮件列表。</p>
+<p>另外，Gmail 的标签是支持层次的，所以可以按照自己的需要对标签进行组织，比如可以把各种通知邮件，如账单，快递进度提醒，论坛提醒，订阅邮件等按照不同标签如“账单”、“提醒”、“订阅”等，组织在“通知”标签下，使邮件组织更加清晰明了。</p>
+<h3 id="自定义收件箱-inbox">自定义收件箱 Inbox</h3>
+<p>Gmail 中可以对收件箱中邮件的显示进行配置。默认，Gmail 提供了 5 中类型的配置，分别是<strong>默认</strong>，<strong>重要优先</strong>，<strong>未读优先</strong>，<strong>加星标优先</strong>，和<strong>优先级邮件优先</strong>。对每一种类型，都可以在此基础上做配置。我个人还是比较喜欢优先级邮件优先。在原有配置的基础上，做些许改动：</p>
+<p><img src="https://ws1.sinaimg.cn/large/5ee78c28ly1g4soi3rnwkj20yg08egmx.jpg" alt=""></p>
+<p>按照上面的配置，收件箱中邮件会按照如下显示：</p>
+<ol>
+<li>系统识别为重要的邮件以及未读邮件</li>
+<li>All Action 这部分是所有 Label 为 Action 的邮件，也就是需要我采取下一步行动的邮件，比如稍后需要回复，需要预定会议室等等。</li>
+<li>其他已读的邮件。</li>
+</ol>
+<p>上述配置的好处就是每次进入收件箱，该做什么都一目了然了。</p>
+<h3 id="过滤器-filters">过滤器 Filters</h3>
+<p>有 Label 功能固然好，但是如果 Label 都要手动添加上去的话，这个功能的作用就大打折扣了。Gmail 中 Filter 才是让 Label 威力无限的催化剂。</p>
+<p>通过自定义 Filter，我们可以做些什么呢？</p>
+<ul>
+<li>跳过 Inbox，直接归档不重要的邮件</li>
+<li>删除邮件</li>
+<li>给邮件加星标</li>
+<li>给邮件加 Label</li>
+<li>自动 forward 邮件</li>
+<li>&hellip;</li>
+</ul>
+<p>自定义 Filter，然后给符合某种规则的邮件自动添加 Label，自动归档，可以让邮件自动归类，把重要邮件从无足轻重的邮件堆里面标记出来，方便更高效的邮件处理。</p>
+<p>Filter 的规则可以针对邮件的发件人，收件人，邮件标题，邮件大小，以及内容进行设置。如以下规则：</p>
+<pre><code>// 当发件人是ddou或者andytesii时，匹配
+FROM: ddou@qq.com OR andytesii@gmail.com
+</code></pre><p>我使用 Gmail 管理多个邮箱的邮件，所以当邮件是从其他邮箱转发过来时，使用该规则可以给这类邮件自动添加 Label，可以很方便的区分来自不同邮箱的邮件。</p>
+<pre><code>// 当邮件标题中包含如下短语时，匹配
+SUBJECT:(&quot;Myfun Service Dashboard&quot; OR &quot;Daily Metrics&quot; OR &quot;[New Relic]&quot; OR DNSPod OR &quot;[New Relic Alerts]&quot; OR &quot;Weekly Sentinel Report&quot;)
+</code></pre><p>工作中经常收到项目中使用的各种服务的通知和提醒邮件，看到这些通知邮件跟重要邮件混在一起，很是烦心。于是，就有了上述 Filter，对标题中含有上述关键字的邮件，会自动归档，并添加 Label 为 Updates。 如此一来，上述邮件就不会在 Inbox 中出现了，而且通过 Updates 标签，也很容易找到所有此类的通知邮件。</p>
+<p>Gmail 中 Filter 定义支持还是比较强大的，感兴趣的可以参考<a href="https://support.google.com/mail/answer/7190?hl=en">Gmail 高级查找功能</a>.</p>
+<h3 id="搜索功能-advanced-search">搜索功能 Advanced Search</h3>
+<p>有过想找几周之前的某封重要邮件却怎么也找不到的情况吗？ 在 Gmail 中，如果了解过它提供的强大的邮件搜索功能，这种情况是不会发生的。如果从来没有使用过 Gmail 的查询功能，请仔细盯着 Gmail 页面顶部那个长长的输入框，忏悔几分钟。 同样，参考上面的<a href="https://support.google.com/mail/answer/7190?hl=en">Gmail 高级查找功能</a>可以看到详细的查询语法。</p>
+<p>下面是两个简单的查询的例子：</p>
+<pre><code>// 查找发件人为ddou，标题包含“需求确认”的邮件
+from: ddou@qq.com 需求确认
+</code></pre><pre><code>// 查找所有的未读邮件
+label: unread
+</code></pre><p>找到所有未读后，我一般就是全选，然后标记已读了。这样，再也不会出现上百封未读邮件的情况了，简直就是强迫症患者的福音啊。</p>
+<h3 id="快捷键-shortcuts">快捷键 Shortcuts</h3>
+<p>作为一个专业码农，对快捷前的嗜好几乎是无药可救了。Gmail 中也提供了如 IDE 般强大的快捷键，甚至比某些 IDE 有过之而无不及。</p>
+<p>在 Gmail 页面，按?即可呼出快捷键列表，看看自己需要哪些，赶紧默默的背下吧。</p>
+<p>这里就列出几个常见的：</p>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>a : 全选当前邮件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>n: 取消选择所有邮件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>shift + i : 标记已读</li>
+<li>shift + n: 标记未读</li>
+<li>x : 邮件列表中选择/取消选择邮件</li>
+<li>o : 邮件列表中，打开当前邮件</li>
+<li>u ：从邮件内容页返回邮件列表</li>
+<li>c : 写邮件</li>
+<li>e : 归档</li>
+<li># : 删除邮件</li>
+<li>r : 回复邮件</li>
+<li>a : 回复全部</li>
+<li>f : 转发邮件</li>
+<li>k/j : 邮件列表总共，光标移动上、下一封邮件</li>
+<li>/ : 搜索邮件</li>
+</ul>
+<p>掌握了上述快捷键，基本上可以在 Gmail 里脱离鼠标操作，处理起邮件来效率高的不得了。</p>
+<p>上面只是个人使用 Gmail 的一些小技巧，不敢独享，总结出来与诸君共享。</p>
+
+</article>
+<div id="disqus_thread" style="margin: 0px 500px"></div>
+<script>
+    (function() { 
+        var d = document, s = d.createElement('script');
+        s.src = '//dytes.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+</body>
+
+</html>

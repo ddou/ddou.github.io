@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<title>函数式编程初体验 (3) | Hugo 主题 MemE</title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.67.1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="http://localhost:1313/css/index.css">
+<link rel="stylesheet" href="http://localhost:1313/css/classes.css">
+<link rel="canonical" href="http://localhost:1313/post/functional-programming-in-real-world-3/">
+<link rel="alternate" type="application/rss+xml" href="" title="Hugo 主题 MemE">
+
+<body>
+
+<header class="icons">
+  
+    <a href="http://localhost:1313/">Hugo 主题 MemE</a>
+  
+  
+    <nav>
+    
+      <a href="/posts/" >
+        
+          文章
+        
+      </a>
+    
+      <a href="/categories/" >
+        
+          分类
+        
+      </a>
+    
+      <a href="/tags/" >
+        
+          标签
+        
+      </a>
+    
+      <a href="/about/" >
+        
+          关于
+        
+      </a>
+    
+      <a href="" >
+        
+          
+        
+      </a>
+    
+      <a href="" >
+        
+          
+        
+      </a>
+    
+    </nav>
+  
+  
+</header>
+
+<article>
+  <header>
+    <h1>函数式编程初体验 (3)</h1>
+    <time datetime="2016-03-19T11:43:26&#43;08:00">March 19, 2016</time>
+  </header>
+  <p>书接上回。在<a href="/posts/functional-programming-in-real-world-2/">上篇文章</a>中，我们的火星探测器已经可以解析命令字符串，并且按照命令执行探测任务。新的功能要求我们在这个基础上，增加记录探测器历史位置信息的功能，以保留一份活动位置记录，以避免后期在某个区域重复探测。</p>
+<h3 id="分析">分析</h3>
+<p>使用我们主流的编程语言，上述功能可以很简单的实现，比如采用如下两个方式：</p>
+<ol>
+<li>定义一个全局变量，保存历史位置信息，每次移动探测器时，添加最近的位置信息</li>
+<li>在MarsRover类中新添一个变量，保存历史位置信息，每次移动都将最近的位置信息添加到变量中</li>
+</ol>
+<p>上述两种方式都可以正确的实现功能。但是在我们函数式编程的大背景下，使用是上述任一种方式，都是与函数式编程的理念相违背的： 纯函数的实现是没有副作用的，即不会修改全局状态，也不会修改参数的状态。那有什么办法呢？</p>
+<p>不论使用何种范式的编程语言，有一些公共的问题都是在程序中需要解决的，例如异常处理，IO，全局状态等需要副作用的场景。只是不同的语言解决问题的方式不同。函数式编程在解决如上述问题时，有自己的思路。<a href="https://www.haskell.org/tutorial/monads.html">Monad</a>就是函数式编程语言用来解决上述问题的利器。</p>
+<h3 id="monad">Monad</h3>
+<p>从本质上理解Monad，需要范畴论（Category Theory）的知识，这也导致了Monad不太容易理解。简单的讲，Monad是封装了一个计算上下文(Computation Context), 正是因为这一点，monad也被称为“可编程的分号”。</p>
+<p>有一个类型的Monad，大部分人都应该都有过了解。那就是<a href="https://en.wikibooks.org/wiki/Haskell/Understanding_monads/Maybe">Maybe Monad</a>。Maybe在很多语言里面都有对应的实现。Java 8中对应的实现为<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html">java.util.Optional</a>。Optional代表一个可能存在的值，针对两种不同的存在状态，同一个方法调用会有不同的执行逻辑， 例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">integer</span> <span class="o">=</span> <span class="n">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">&#34;123&#34;</span><span class="o">).</span><span class="na">map</span><span class="o">(</span><span class="n">str</span> <span class="o">-&gt;</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">str</span><span class="o">));</span>
+<span class="n">Optional</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">empty</span> <span class="o">=</span> <span class="n">Optional</span><span class="o">.&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="n">empty</span><span class="o">().</span><span class="na">map</span><span class="o">(</span><span class="n">str</span> <span class="o">-&gt;</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">str</span><span class="o">));</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果我们查看Optional的源码，可以看到map方法的实现，针对了两种不同的存在状态做了不同的处理。这就是Optional所包含的所谓计算上下文，也是Monad的价值所在。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span> <span class="nf">map</span><span class="o">(</span><span class="n">Function</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="n">T</span><span class="o">,</span> <span class="o">?</span> <span class="kd">extends</span> <span class="n">U</span><span class="o">&gt;</span> <span class="n">mapper</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">mapper</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(!</span><span class="n">isPresent</span><span class="o">())</span>
+        <span class="k">return</span> <span class="n">empty</span><span class="o">();</span>
+    <span class="k">else</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">Optional</span><span class="o">.</span><span class="na">ofNullable</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">value</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>类似的，我们也可以通过Monad来实现保存MarsRover的历史位置数据。</p>
+<h3 id="实现">实现</h3>
+<p>首先，我们先定义Log数据类型。 按照功能要求，我们的Log是一些列的坐标点。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="kr">type</span> <span class="kt">Log</span> <span class="ow">=</span> <span class="p">[</span><span class="kt">Point</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>然后，我们定义一个自己的monad：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="kr">newtype</span> <span class="kt">Logger</span> <span class="n">a</span> <span class="ow">=</span>  <span class="kt">Logger</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="kt">Log</span><span class="p">)</span>
+    <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Show</span><span class="p">)</span>
+
+<span class="nf">execLogger</span> <span class="ow">::</span> <span class="kt">Logger</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="kt">Log</span><span class="p">)</span>
+<span class="nf">execLogger</span> <span class="p">(</span><span class="kt">Logger</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">log</span><span class="p">))</span> <span class="ow">=</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">log</span><span class="p">)</span>
+
+<span class="nf">record</span> <span class="ow">::</span> <span class="kt">MarsRover</span> <span class="ow">-&gt;</span> <span class="kt">Logger</span> <span class="kt">MarsRover</span>
+<span class="nf">record</span> <span class="n">marsRover</span> <span class="ow">=</span> <span class="kt">Logger</span> <span class="p">(</span><span class="n">marsRover</span><span class="p">,</span> <span class="p">[</span><span class="n">point</span><span class="p">])</span>
+    <span class="kr">where</span> <span class="n">point</span> <span class="ow">=</span> <span class="n">getPosition</span> <span class="n">marsRover</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们定义的monad是一个新的数据类型Logger，包含了MarsRover实例，和它对应的历史位置信息。同时，我们定义了:</p>
+<ul>
+<li>
+<p>execLogger方法</p>
+<blockquote>
+<p>用来从Logger中提取出rover和历史位置数据。</p>
+</blockquote>
+</li>
+<li>
+<p>record方法</p>
+<blockquote>
+<p>记录rover当前位置信息，返回包含当前rover和当前坐标的Logger对象</p>
+</blockquote>
+</li>
+</ul>
+<p>下面是Logger monad的实现：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="kr">instance</span> <span class="kt">Monad</span> <span class="kt">Logger</span> <span class="kr">where</span>
+    <span class="n">return</span> <span class="n">a</span> <span class="ow">=</span> <span class="kt">Logger</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="kt">[]</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">&gt;&gt;=</span> <span class="n">k</span> <span class="ow">=</span> <span class="kr">let</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="ow">=</span> <span class="n">execLogger</span> <span class="n">m</span>
+                  <span class="n">n</span>     <span class="ow">=</span> <span class="n">k</span> <span class="n">a</span>
+                  <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">=</span> <span class="n">execLogger</span> <span class="n">n</span>
+              <span class="kr">in</span> <span class="kt">Logger</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">x</span> <span class="o">++</span> <span class="n">y</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们实现了两个monad typeclass定义的方法：</p>
+<ul>
+<li>
+<p>return</p>
+<blockquote>
+<p>用来将MarsRover，转换成一个Logger，也是我们monad实例的创建函数</p>
+</blockquote>
+</li>
+<li>
+<p>(&gt;&gt;=)</p>
+<blockquote>
+<p>这里封装了我们的计算上下文，也就是累积保存位置信息的逻辑。(&gt;&gt;=)函数接受两个参数，第一个参数是Logger，亦即当前状态数据（rover+历史位置数据）。第二个参数是下一步要执行的操作。从(&gt;&gt;=)的实现来看，首先使用execLogger提取出当前状态，历史状态信息保存为x，rover信息保存为a；然后，执行下一步操作，操作结果为n；再次用execLogger提取出操作结果，得到这一步产生的状态信息y和新的rover信息b，然后将最终结果b和累积的位置数据x++y返回出去。</p>
+</blockquote>
+</li>
+</ul>
+<p>定义好了我们的monad后，对应的我们的run方法也要做些许的修改：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">run</span> <span class="ow">::</span> <span class="kt">Maybe</span> <span class="kt">Command</span> <span class="ow">-&gt;</span> <span class="kt">MarsRover</span> <span class="ow">-&gt;</span> <span class="kt">Logger</span> <span class="kt">MarsRover</span>
+<span class="nf">run</span> <span class="n">command</span> <span class="n">rover</span> <span class="ow">=</span>
+    <span class="kr">case</span> <span class="n">command</span> <span class="kr">of</span>
+        <span class="kt">Just</span> <span class="kt">L</span> <span class="ow">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="n">turnLeft</span> <span class="n">rover</span>
+        <span class="kt">Just</span> <span class="kt">L</span> <span class="ow">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="n">turnRight</span> <span class="n">rover</span>
+        <span class="kt">Just</span> <span class="kt">M</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">move&#39;</span> <span class="n">rover</span><span class="p">)</span> <span class="o">&gt;&gt;=</span> <span class="n">record</span>
+        <span class="kt">Nothing</span> <span class="ow">-&gt;</span> <span class="n">return</span> <span class="n">rover</span>
+    <span class="kr">where</span> <span class="n">move&#39;</span> <span class="n">rover</span> <span class="ow">=</span> <span class="n">return</span> <span class="p">(</span><span class="n">move</span> <span class="n">rover</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在新版本的run方法中，方法的返回值改成了我们的Logger类型，毕竟返回值里面是要包含我们的历史位置信息的。内部实现上并没有太大的变化，只是通过return来把返回值转换为Logger，对于move操作来说，move之后，记录下当前位置。</p>
+<p>因为我们是要解析命令字符串，执行一系列指令，我们定义了一个用来将一系列指令顺序在rover上执行的方法apply：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">apply</span> <span class="ow">::</span> <span class="kt">Logger</span> <span class="kt">MarsRover</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="kt">MarsRover</span> <span class="ow">-&gt;</span> <span class="kt">Logger</span> <span class="kt">MarsRover</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="kt">Logger</span> <span class="kt">MarsRover</span>
+<span class="nf">apply</span> <span class="n">rover</span> <span class="n">actions</span> <span class="ow">=</span> <span class="kr">case</span> <span class="n">actions</span> <span class="kr">of</span>
+    <span class="kt">[]</span> <span class="ow">-&gt;</span>  <span class="n">rover</span>
+    <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">apply</span> <span class="p">(</span><span class="n">rover</span> <span class="o">&gt;&gt;=</span> <span class="n">x</span><span class="p">)</span> <span class="n">xs</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>apply函数接受2个参数，第一个是一个Logger对象，包含rover的初始状态。第二个参数是一个数组，代表要执行在rover上的指令。返回的是Logger对象，包含了rover的最终状态和历史位置信息。</p>
+<p>我们可以通过如下方式验证结果：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">main</span> <span class="ow">::</span> <span class="kt">IO</span><span class="nb">()</span>
+<span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span>
+    <span class="kr">let</span> <span class="n">rover</span> <span class="ow">=</span> <span class="kt">MarsRover</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="kt">S</span>
+    <span class="kr">let</span> <span class="n">actions</span> <span class="ow">=</span> <span class="n">map</span> <span class="n">run</span> <span class="o">$</span> <span class="n">map</span> <span class="n">parse</span> <span class="s">&#34;MLMRMLMRM&#34;</span>
+    <span class="kr">let</span> <span class="n">result</span> <span class="ow">=</span> <span class="n">apply</span> <span class="p">(</span><span class="n">record</span> <span class="n">rover</span><span class="p">)</span> <span class="n">actions</span>
+    <span class="n">putStrLn</span> <span class="o">$</span> <span class="n">show</span> <span class="n">result</span>
+    <span class="c1">-- Logger (MarsRover (2,-3) S,[(0,0),(0,-1),(1,-1),(1,-2),(2,-2),(2,-3)])</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述输出中的[(0,0),(0,-1),(1,-1),(1,-2),(2,-2),(2,-3)]即为探测器的历史位置信息。</p>
+<p>查看完整代码，看<a href="https://raw.githubusercontent.com/yutaodou/functional-programming-via-haskell/f5b9f9246c319821a9c9523e210608bf98c77cb5/examples/mars-rover.hs">这里</a></p>
+<p>本篇文章是函数式编程系列之一：</p>
+<ol>
+<li><a href="/posts/functional-programming-concepts/">函数式编程 101</a></li>
+<li><a href="/posts/functional-programming-concepts-part-two/">函数式编程 101 (续)</a></li>
+<li><a href="/posts/functional-programming-in-real-world/">函数式编程初体验 一</a></li>
+<li><a href="/posts/functional-programming-in-real-world-2/">函数式编程初体验 二</a></li>
+<li>函数式编程初体验 三</li>
+</ol>
+
+</article>
+
+
+
+<script src="/livereload.js?port=1313&mindelay=10&v=2" data-no-instant defer></script></body>
+
+</html>

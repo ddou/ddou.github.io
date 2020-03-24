@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<title>[译文]再谈CAP理论 | 子不语</title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.67.1" />
+<meta name="description" content="Some description">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://ddou.github.iocss/index.css">
+<link rel="stylesheet" href="https://ddou.github.iocss/classes.css">
+<link rel="canonical" href="https://ddou.github.io/posts/cap-theorem-revisited-translation/">
+<link rel="alternate" type="application/rss+xml" href="" title="子不语">
+
+<body>
+
+<header class="icons">
+  
+    <a href="https://ddou.github.io">子不语</a>
+  
+  
+    <nav>
+    
+      <a href="https://ddou.github.io/" >
+        
+          文章
+        
+      </a>
+    
+      <a href="https://ddou.github.io/tags/" >
+        
+          标签
+        
+      </a>
+    
+      <a href="https://ddou.github.io/about/" >
+        
+          关于
+        
+      </a>
+    
+      <a href="https://ddou.github.io/index.xml" >
+        
+          订阅
+        
+      </a>
+    
+    </nav>
+  
+  
+    <div class="hidden description">Some description</div>
+  
+</header>
+
+<article>
+  <header>
+    <h1>[译文]再谈CAP理论</h1>
+    <time
+      datetime="2017-05-09T23:58:10&#43;08:00">May 09, 2017</time>
+      
+
+<small><code><a href="https://ddou.github.io/tags/architecture">Architecture</a></code></small>
+
+
+<small><code><a href="https://ddou.github.io/tags/distributed-system">Distributed System</a></code></small>
+
+
+<small><code><a href="https://ddou.github.io/tags/translation">Translation</a></code></small>
+
+  </header>
+  <p>最近在看分布式相关文章时，偶遇<a href="http://robertgreiner.com/2014/08/cap-theorem-revisited/">该篇文章</a>，文章虽简短，但分析透彻, 故译来与大家分享，希望能读者有帮助。</p>
+<p><em>译文如下</em></p>
+<p>当今技术领域，我们经常碰到这样一种情况：希望通过增加额外的资源，如（计算能力，存储等）来横向扩展系统，以期能成功在合理的时间内完成请求处理。这是通过给系统添加商用硬件（commodity hardware）来应对不断增加的负载。该扩展策略导致的一个问题就是系统复杂度升高。该场景下 CAP 理论就要起作用了。</p>
+<p>CAP 理论陈述如下： 在一个分布式系统中(一个由多个共享数据又互相连接的计算机节点组成的系统)，对于一次数据读/写操作对，只能得到如下三个保证中的两个： 一致性，可用性，分区容错性， 其中之一必然被牺牲。</p>
+<blockquote>
+<p>The CAP Theorem states that, in a distributed system (a collection of interconnected nodes that share data.), you can only have two out of the following three guarantees across a write/read pair: Consistency, Availability, and Partition Tolerance - one of them must be sacrificed.</p>
+</blockquote>
+<p>如下图所示，我们并没有太多选择：</p>
+<p><img src="https://ws1.sinaimg.cn/large/5ee78c28ly1g4soi3a8hej20dw08f75h.jpg" alt=""></p>
+<ul>
+<li>一致性</li>
+</ul>
+<p>对于一个给定的客户端，一次读操作总是确保返回最近一次写操作。</p>
+<ul>
+<li>可用性</li>
+</ul>
+<p>一个正常工作的节点总是在合理的时间范围内返回合理的响应。</p>
+<ul>
+<li>分区容错性</li>
+</ul>
+<p>当出现网络分区时，系统也可以继续工作。</p>
+<p>在展开讨论前，有一个点需要点明： 面向对象编程不等同网络编程！在构建共享内存的应用时一些天经地义的假设在分布式系统中并不成立。</p>
+<p>分布式计算的一个<a href="http://en.wikipedia.org/wiki/Fallacies_of_Distributed_Computing">假象</a>就是网络是可靠的。事实并非如此。网络或者其部分  总会经常出其不意的出故障。而当故障发生时，你除了接受别无他法。</p>
+<p>鉴于网络并非完全可靠，在分布式系统中，我们必须要使系统对网络分区具有容忍性。当网络分区发生时，我们需要做出选择。基于 CAP 理论，这意味着我们要从<strong>一致性</strong>和<strong>可用性</strong>中二选一。</p>
+<ul>
+<li><strong>CP  一致性/分区容错性</strong></li>
+</ul>
+<p><img src="https://ws1.sinaimg.cn/large/5ee78c28ly1g4soi3fi4sj20b409kwfo.jpg" alt=""></p>
+<p>该情况下，当发生网络分区时，客户端会持续等待响应，直至发生 Timeout 错误。根据不同的场景，系统也可以选择返回一个错误。当业务需求需要  读写操作具有原子性时，选择<strong>一致性</strong>而不是可用性。</p>
+<ul>
+<li><strong>AP 可用性/分区容错性</strong></li>
+</ul>
+<p><img src="https://ws1.sinaimg.cn/large/5ee78c28ly1g4soi2ht35j20b409kab3.jpg" alt=""></p>
+<p> 该情况下，当发生网络分区时，系统会返回最近版本的数据，但可能是过期的数据。处于该状态的系统也继续接受写操作。当系统对数据的同步要求比较灵活时，可以优先选择<strong>可用性</strong>，而不是一致性。当系统在发生外部错误，有需要确保系统正常工作时，可用性是一个令人信服的选择。</p>
+<p>CA 还是 AP，这是一个设计的折中。在发生网络分区时，你可以做出不同的选择。无论接受与否，网络故障总会发生，与软件无关。</p>
+<p>分布式系统有很多优势，但也引入了复杂度。在网络故障下，理解不同的选项，并做出正确的选择才是系统成功的关键。 如果在起点不能正确的理解这一点，你的系统注定失败。</p>
+<p><em>译文结束</em></p>
+<p><em>原文链接如下：<a href="http://robertgreiner.com/2014/08/cap-theorem-revisited/">http://robertgreiner.com/2014/08/cap-theorem-revisited/</a></em></p>
+
+</article>
+<div id="disqus_thread" style="margin: 0px 500px"></div>
+<script>
+    (function() { 
+        var d = document, s = d.createElement('script');
+        s.src = '//dytes.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+</body>
+
+</html>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on 子不语</title>
+    <link>https://ddou.github.io/post/</link>
+    <description>Recent content in Posts on 子不语</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 30 Dec 2019 17:57:02 +0800</lastBuildDate>
+    
+	<atom:link href="https://ddou.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>AWS专家级解决方案架构师认证(SAP)备考指北</title>
+      <link>https://ddou.github.io/posts/sap-certificate/</link>
+      <pubDate>Mon, 30 Dec 2019 17:57:02 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/sap-certificate/</guid>
+      <description>一个Flag 年中上一个项目结束，回到阔别已久的西安，进入一个相对稳定的项目。 了解到AWS调整了AWS专家级解决方案架构师认证(SAP)的条件，取消了助理级解决方案架构师(SAA)的限制条件，可以直接进行专业级别的认证。作为一个在AWS平台上摸爬滚打的大概4年的老鸟，我觉得也应该是时候经过一次考试的洗礼，全面而细致的梳理下已有知识，并重新认识AWS平台上的各种服务。于是，一个flag就这么立了起来。从8月中开始准备，到12月初通过考试，耗时大概3个月。下面就把这三个月的复习备考过程分享给需要的朋友。
+AWS一共推出了上图中的11个认证考试，涵盖了不同的专业方向以及难度级别。其中AWS Solution Architect解决方案架构师认证更多是关注AWS平台上的架构设计，比如使用AWS平台上的各种服务设计一个安全、稳定可靠、伸缩性好、性能优越，并且可运维的系统。除了架构设计外，系统和数据迁移、企业环境下AWS网络规划、成本控制等也是考试的要点。
+AWS解决方案架构师认证有两个级别：助理级解决方案架构师(SAA)和专家级解决方案架构师(SAP)。2018年10月之后, AWS取消了参加SAP认证必须要先通过SAA认证的前提要求，给应试者更大的灵活性。在申请专业级认证前，应试者不再需要获得助理级认证，并且在申请专项认证之前，应试者不再需要获得云从业者认证或助理级认证。
+考试内容 SAP的考试一共涵盖上述5部分内容：
+ 复杂组织环境下的设计  这部分主要考察复杂组织环境下的系统设计，如一个组织，有多个业务线（Business unit),、复杂的合规要求以及多变的扩展性需求，在该环境下，如何进行鉴权以及访问控制，如何规划AWS网络以满足跨VPC、Account或者和自有数据中心网络互通等。
+在平时工作中，我们更多是关注与系统的设计和实现，大部分人没有太多机会能在上述复杂环境下进行实操，这也是个人认为在学习过程中最有挑战和花费时间最多的部分。
+ 设计新解决方案  如何基于AWS平台设计一个新的解决方案，在满足业务需求的同时，满足性能、可靠性、伸缩行、经济行等非功能性需求。这部分更多考察对AWS核心服务的理解，如EC2, EBS, S3, IAM, Security group, RDS, API Gateway, Lambda, SNS, SQS等。
+ 迁移规划  系统和数据从自有数据中心向AWS平台迁移。
+ 成本控制  如何以最具成效比的方式架构系统
+ 现有系统优化  考试形式 考试题型全部为选择题，有单选题和多选题之分。如果是多选题，题目会标示有几个正确选项。
+相比较于SAA认证，SAP在题目的难度上有非常大的提升。SAA重在于对AWS各个服务功能的理解，偏概念性，题目也较为直接，如：
+而SAP考试则更偏重知识的实际应用，场景更为复杂，如下例所示：
+如果选择英语作为考试语言，那么SAP的考试首先面对的是3个小时的英语阅读理解，然后才是背后的AWS认证考试。
+这样的题目更类似于日常工作的场景：给出一个假设的业务场景，有具体的期望目标以及各种约束，然后给出解决方案。除了理解AWS各种服务的功能、特性、使用场景、限制外，SAP还需要有更多的实战经验和更多架构上的理解，所以说SAP是难度最高的AWS认证考试也不为过。估计这也是为什么AWS建议按照推荐的学习路径逐步学习，再进行SAP认证的原因了。
+复习规划 每年的AWS reinvent都是一次狂欢，大家都期盼着新的服务发布，帮大家解决实际问题。经过一轮轮狂欢，AWS的服务也涵盖了方方面面。对准备考试而言，这可不是什么值得高兴的事情，AWS服务控制台中一页已经不能完整列出所有的服务了。
+关注重点
+如此之多的服务，每个服务都达到同样的熟悉程度是不现实的，那就只能重点关注了。我订阅了两个月的acloud.gugu(这里真的没有广告)，基于上面SAP相关的视频，把主要的服务快速了解一遍。经过这一轮，整理出了一个学习列表，把相关服务按照领域归类，逐个学习了解。
+ 对于已经比较了解的服务，快速跳过； 对于比较重要但之前接触不多的服务，相关的FAQ/文档/用户案例/白皮书快速看一遍。 对于不太常用的服务，更多是看FAQ，了解服务基本功能，以及用户案例。  定期检查
+acloud.gugu（真心没有广告）的另外一个功能是模拟考试，大概有100道题。可以通过完成这些题目，检查学习的情况，查漏补缺。另外，AWS官方也有一份例题，虽然没有答案的，按时对于了解考试题型还是非常有帮助的。
+除了上述外，网上也有不少例题资源，如www.examtopics.com, 这里有网络上收集整理的AWS考试例题。每个题目下都有评论和讨论，这里也是检查复习成果、查漏补缺的好去处。
+资料
+SAP认证并没有AWS官方的备考指南之类的资料，更多是需要自己基于个人情况复习。个人经验而言，下面几种形式的复习资料比较有效：
+  SAP认证视频教程
+A Cloud Guru和Linux Academy均有相关视频教程。通过这些视频教程，快速了解AWS各种服务、以及每个服务的功能要点，还是比较有效的。</description>
+    </item>
+    
+    <item>
+      <title>你的代码不干净</title>
+      <link>https://ddou.github.io/posts/clean-code-discussion/</link>
+      <pubDate>Tue, 23 Jul 2019 15:34:30 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/clean-code-discussion/</guid>
+      <description>“你这个代码写的不clean呀， 你看这里的order是个double类型的， 为什么不用整型的呢？”。在一次讨论中，对方给出这么个结论。
+关于设计的讨论基本是程序员的日常。在讨论中，各种“大帽子”会飞过来,飞过去， Clean、SOLID、扩展性、可测试性、复杂度等等。如果对“帽子”本身的内涵不理解，被扣帽子的人就么办法做出合理的为自己的代码辩护。扣帽子的人则是在调皮捣蛋。 比如上面的场景，clean是指什么？当对方说代码不clean的时候，他又在指什么？
+按照需求，页面上需要显示出一系列表单控件，order则标记着各个控件的显示顺序。实际实现中，每个控件实例有个order属性，按照order排序后，逐个显示即满足需求。上面的实现是能完全满足Kent Beck在简单设计(Simple design)中提高的4个要求的:
+ 测试通过 明确表达代码意图 没有重复 最小化实现，没有冗余  额外的好处，就是简单，易理解， 维护也方便。当有更多的组件需要插入到现有列表中时，也总是可以找到一个位置。另外，即使如对方所言换成整型，也没有本质的区别。
+按照我们对整洁代码的理解，这个实现是满足要求的。但对方指的不clean, 具体是什么呢？是不满足需求？还是有其他隐情？真相是作为非技术人员，对方只是纯粹觉得整数比带小数点的浮点数更“干净”！
+这就是典型的讨论双方对clean没有共识，也就是所谓的鸡同鸭讲。这时，就需要理解内涵的一方开始耐心的科普：首先我们定义一下什么是X, 然后再讨论为什么Y不X。
+好的程序员，不仅要有一双巧手写出优雅的代码，还要缜密理论知识织就的铁布衫，随时抵御飞来的大帽子。</description>
+    </item>
+    
+    <item>
+      <title>功能π的敏捷之旅</title>
+      <link>https://ddou.github.io/posts/real-world-agile-delivery/</link>
+      <pubDate>Tue, 22 Aug 2017 17:58:10 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/real-world-agile-delivery/</guid>
+      <description>本文里会以一个功能 π 的开发流程为例，展示公司内一个敏捷团队的软件开发实践。
+项目背景 客户 R 是澳洲最大的在线房地产广告平台。公司团队是协助 R 客户创建一个针对中国市场的房产信息广告平台，用来展示澳洲以及其他海外房产，方便国内投资者。
+作为一个全功能的交付团队，整个团队的人员一共 11 人，成员包括 TL _ 1、BA _ 1、UX _ 1、QA _ 1、Ops _ 1、Dev _ 6。客户方面 Delivery Lead _ 1 和 Product Owner _ 1, 两人都在澳洲。
+客户负责提供项目的 Roadmap，优先级以及初步的需求。后续由公司开发团队完成从需求分析、交互设计、功能设计、实现、测试、以及部署上线的全生命周期的工作。
+功能 π 的敏捷之旅 下面以一个功能 π 的开发流程为例，展示笔者所在项目的开发实践。
+计划 项目的路线图 Roadmap 是由 Trello 来管理的。Epic 需求会由客户 PO 记录在 Trello 中。Trello board 中设置的有不同的列，如 Backlog, Planned, Next, In progress, Completed 等。每列中卡片由上而下代表优先级的递减。Trello board 作为项目 high level 需求的管理工具，可以很直观的了解项目整体的进展状况。
+每两周全团队会进行一次计划会议，类似 IPM，但是主要是根据 Roadmap 上的优先级，确定近期的开发计划。最终的输出是一个具体的 task 列表。其中会包括:</description>
+    </item>
+    
+    <item>
+      <title>[译文]再谈CAP理论</title>
+      <link>https://ddou.github.io/posts/cap-theorem-revisited-translation/</link>
+      <pubDate>Tue, 09 May 2017 23:58:10 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/cap-theorem-revisited-translation/</guid>
+      <description>最近在看分布式相关文章时，偶遇该篇文章，文章虽简短，但分析透彻, 故译来与大家分享，希望能读者有帮助。
+译文如下
+当今技术领域，我们经常碰到这样一种情况：希望通过增加额外的资源，如（计算能力，存储等）来横向扩展系统，以期能成功在合理的时间内完成请求处理。这是通过给系统添加商用硬件（commodity hardware）来应对不断增加的负载。该扩展策略导致的一个问题就是系统复杂度升高。该场景下 CAP 理论就要起作用了。
+CAP 理论陈述如下： 在一个分布式系统中(一个由多个共享数据又互相连接的计算机节点组成的系统)，对于一次数据读/写操作对，只能得到如下三个保证中的两个： 一致性，可用性，分区容错性， 其中之一必然被牺牲。
+ The CAP Theorem states that, in a distributed system (a collection of interconnected nodes that share data.), you can only have two out of the following three guarantees across a write/read pair: Consistency, Availability, and Partition Tolerance - one of them must be sacrificed.
+ 如下图所示，我们并没有太多选择：
+ 一致性  对于一个给定的客户端，一次读操作总是确保返回最近一次写操作。
+ 可用性  一个正常工作的节点总是在合理的时间范围内返回合理的响应。
+ 分区容错性  当出现网络分区时，系统也可以继续工作。</description>
+    </item>
+    
+    <item>
+      <title>一个Dash的替代解决方案</title>
+      <link>https://ddou.github.io/posts/dash-alternative/</link>
+      <pubDate>Fri, 08 Apr 2016 22:13:23 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/dash-alternative/</guid>
+      <description>作为一个合格的码农，都与自己的工具箱。
+如果讲到查看文档，Dash 必须是排第一位的。但是$29.99 的售价的确让不少人望而却步。
+好在软件的世界里，总有替代品可见，DevDocs就是一个查看文档除 Dash 外的绝好选择。DevDocs 提供了与 Dash 类似的功能，只不过是基于网页的应用使用起来多少会有些不习惯。
+那能不能自己封装一下呢？一个好的办法就是Electron。
+于是乎，就有了DevDocs-Wrapper，通过 Electron 封装 DevDocs 来提供类似与桌面应用的体验，见下图：
+可以从DevDocs-Wrapper自行下载代码打包。</description>
+    </item>
+    
+    <item>
+      <title>函数式编程初体验 (3)</title>
+      <link>https://ddou.github.io/posts/functional-programming-in-real-world-3/</link>
+      <pubDate>Sat, 19 Mar 2016 11:43:26 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/functional-programming-in-real-world-3/</guid>
+      <description>书接上回。在上篇文章中，我们的火星探测器已经可以解析命令字符串，并且按照命令执行探测任务。新的功能要求我们在这个基础上，增加记录探测器历史位置信息的功能，以保留一份活动位置记录，以避免后期在某个区域重复探测。
+分析 使用我们主流的编程语言，上述功能可以很简单的实现，比如采用如下两个方式：
+ 定义一个全局变量，保存历史位置信息，每次移动探测器时，添加最近的位置信息 在MarsRover类中新添一个变量，保存历史位置信息，每次移动都将最近的位置信息添加到变量中  上述两种方式都可以正确的实现功能。但是在我们函数式编程的大背景下，使用是上述任一种方式，都是与函数式编程的理念相违背的： 纯函数的实现是没有副作用的，即不会修改全局状态，也不会修改参数的状态。那有什么办法呢？
+不论使用何种范式的编程语言，有一些公共的问题都是在程序中需要解决的，例如异常处理，IO，全局状态等需要副作用的场景。只是不同的语言解决问题的方式不同。函数式编程在解决如上述问题时，有自己的思路。Monad就是函数式编程语言用来解决上述问题的利器。
+Monad 从本质上理解Monad，需要范畴论（Category Theory）的知识，这也导致了Monad不太容易理解。简单的讲，Monad是封装了一个计算上下文(Computation Context), 正是因为这一点，monad也被称为“可编程的分号”。
+有一个类型的Monad，大部分人都应该都有过了解。那就是Maybe Monad。Maybe在很多语言里面都有对应的实现。Java 8中对应的实现为java.util.Optional。Optional代表一个可能存在的值，针对两种不同的存在状态，同一个方法调用会有不同的执行逻辑， 例如：
+Optional&amp;lt;Integer&amp;gt; integer = Optional.of(&amp;#34;123&amp;#34;).map(str -&amp;gt; Integer.parseInt(str)); Optional&amp;lt;Integer&amp;gt; empty = Optional.&amp;lt;String&amp;gt;empty().map(str -&amp;gt; Integer.parseInt(str)); 如果我们查看Optional的源码，可以看到map方法的实现，针对了两种不同的存在状态做了不同的处理。这就是Optional所包含的所谓计算上下文，也是Monad的价值所在。
+public&amp;lt;U&amp;gt; Optional&amp;lt;U&amp;gt; map(Function&amp;lt;? super T, ? extends U&amp;gt; mapper) { Objects.requireNonNull(mapper); if (!isPresent()) return empty(); else { return Optional.ofNullable(mapper.apply(value)); } } 类似的，我们也可以通过Monad来实现保存MarsRover的历史位置数据。
+实现 首先，我们先定义Log数据类型。 按照功能要求，我们的Log是一些列的坐标点。
+type Log = [Point] 然后，我们定义一个自己的monad：
+newtype Logger a = Logger (a, Log) deriving (Show) execLogger :: Logger a -&amp;gt; (a, Log) execLogger (Logger (a, log)) = (a, log) record :: MarsRover -&amp;gt; Logger MarsRover record marsRover = Logger (marsRover, [point]) where point = getPosition marsRover 我们定义的monad是一个新的数据类型Logger，包含了MarsRover实例，和它对应的历史位置信息。同时，我们定义了:</description>
+    </item>
+    
+    <item>
+      <title>函数式编程初体验 (2)</title>
+      <link>https://ddou.github.io/posts/functional-programming-in-real-world-2/</link>
+      <pubDate>Sat, 27 Feb 2016 21:58:43 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/functional-programming-in-real-world-2/</guid>
+      <description>在上篇文章中，我们实现的MarsRover已经支持三种基本命令操作了。这次我们来稍微完善下，添加从字符串解析出命令的功能。
+分析 传入的指令是一个字符串，每个字符对应一个命令。探测器支持的命令只有L，R和M。当遇到不支持的字符时，探测器不作出任何响应。在一般的编程语言中，可能会使用异常来处理无法支持的命令的情况。那么在Haskell中，我们有什么新的武器可以使用吗？ Yes， 那就是Maybe monad.
+Maybe类型代表一种有状态的数据，亦即这个数据存在，也可能不存在。Maybe类型有两个值： Just a&#39;和Nothing，分别对应了两种状态。那么在我们的问题中，我们可以让解析函数返回一个Maybe类型，当返回的是Just时，表示返回的是一个支持的命令；当返回Nothing时，表示遇到不支持的命令。
+实现 基于上面的分析，我们的parse函数可以实现如下：
+parse :: Char -&amp;gt; Maybe Command parse c = case c of &amp;#39;L&amp;#39; -&amp;gt; Just L &amp;#39;R&amp;#39; -&amp;gt; Just R &amp;#39;M&amp;#39; -&amp;gt; Just M _ -&amp;gt; Nothing parse函数接收一个字符，返回一个Maybe Command。这里又一次使用了模式匹配。当遇到不支持的命令时，返回一个Nothing。
+如此一来，我们的execute的实现也要做对应的改动，以支持Maybe类型的参数。之前的定义如下：
+execute :: MarsRover -&amp;gt; Command -&amp;gt; MarsRover execute rover command = case command of L -&amp;gt; turnLeft rover R -&amp;gt; turnRight rover M -&amp;gt; move rover 为了接收Maybe类型的参数，我们修改为如下:
+run :: Maybe Command -&amp;gt; MarsRover -&amp;gt; MarsRover run command rover = case command of Just L -&amp;gt; turnLeft rover Just R -&amp;gt; turnRight rover Just M -&amp;gt; move rover Nothing -&amp;gt; rover 新的实现中，我们把execute重命名为run，并且修改了参数的顺序和类型。当run遇到Nothing的时候，他什么都不做，只是返回原始的rover实例。</description>
+    </item>
+    
+    <item>
+      <title>函数式编程初体验 （1）</title>
+      <link>https://ddou.github.io/posts/functional-programming-in-real-world/</link>
+      <pubDate>Sat, 27 Feb 2016 21:58:43 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/functional-programming-in-real-world/</guid>
+      <description>在之前的两篇函数式编程语言特性的文章（上篇和下篇）中简单介绍了一些基本的函数式编程的概念。对函数式编程有了一些基本的概念，那现实中的函数式编程是什么样子的呢？这里就选取一个比较简单的问题，使用Haskell尝试解决一下，以求近距离的感受下函数之美。
+问题 这里采用的是我司一个废弃了很久的面试题目MarsRover，题目内容如下：
+ A squad of robotic rovers are to be landed by NASA on a plateau on Mars. This plateau, which is curiously rectangular, must be navigated by the rovers so that their on-board cameras can get a complete view of the surrounding terrain to send back to Earth. A rover&amp;rsquo;s position and location is represented by a combination of x and y co-ordinates and a letter representing one of the four cardinal compass points.</description>
+    </item>
+    
+    <item>
+      <title>函数式编程 101 (续)</title>
+      <link>https://ddou.github.io/posts/functional-programming-concepts-part-two/</link>
+      <pubDate>Mon, 18 Jan 2016 21:57:55 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/functional-programming-concepts-part-two/</guid>
+      <description>上一篇提到了函数式编程语言的两个特点。这里书接上回，我们继续探讨函数式编程语言的其他特点。
+尾递归 递归是我们在编程中处理集合时经常用的到的一个技巧，使用递归相对于循环来说可以更容易的实现功能。比如说求一个整数num的阶乘，采用递归可以实现如下：
+private static Integer factorial(int num) { if (num == 1) { return 1; } return num * factorial(num - 1); } Integer result = factorial(10); // result = 3628800 上述递归的实现清晰易懂，结果正确。但是一个问题是，每当factorial调用自身时，如当num=8时，都会在调用堆栈上保存当前的执行上下文，当回调结束时以计算当前num(8)和factorial(7)的乘积。我们知道 每个程序在执行时，系统分配的堆栈大小都是有限制的。当回调足够多时，如num大，就可能出现堆栈溢出的错误。
+一个解决该问题的办法就是采用尾递归。比如采用尾递归的方式实现阶乘计算如下：
+private static Integer factorial2(int accu, int num) { if (num == 1) { return accu; } return factorial2(accu * num, num - 1); } Integer result = factorial2(1, 10); // result = 3628800 上述factorial2的实现中，中间的计算结果是以参数accu的方式传递给递归调用的函数，此时无需等递归函数调用结束再计算，故无需保存调用上下文，避免了堆栈操作，也就避免了因递归调用太多而导致的堆栈溢出问题。
+对集合进行操作是编程中的一个永恒主题。函数式编程语言中内置了许多对集合进行操作的函数，其中很多都是采用尾递归式的实现。如haskell中求阶乘:</description>
+    </item>
+    
+    <item>
+      <title>函数式编程 101</title>
+      <link>https://ddou.github.io/posts/functional-programming-concepts/</link>
+      <pubDate>Tue, 12 Jan 2016 21:07:54 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/functional-programming-concepts/</guid>
+      <description>函数式编程这几年变得越来越流行起来，越来越多的语音融入了函数式编程的语法，就连更新缓慢如Java也不例外，在Java8中引入了函数式编程的语法。JVM平台的后起之秀Scala，Groovy更是出生之初就有内置了对函数式编程的支持。作为最经常被拿来与Java做比较的C#，更是抢先一步在.NET 3.5版本时就有了对函数式编程的支持。后来.NET平台上更是直接引入了函数式编程语言F#。
+函数式编程的兴起并非没有原因。
+ 函数式编程语言一般极具表现力. 相比主流的面向对象语言能以极少的代码完成相同的工作。与代码量的减少相对应的就是维护成本的降低。 相对于命令式编程，函数式编程语言都是采用声明式编程的方式，能在更高的抽象级别上编程，代码更易于理解。 **纯函数是没有副作用的，既不会修改全局状态，也不会修改传入的参数。**在进行多线程编程时，就从根本上避免死锁，活锁或者是线程饥饿的问题。  函数式编程语言的特征 高阶函数 在函数式编程语言中，函数终于成为一等公民，可以跟变量一样作为参数传递，同时也可以作为函数返回值返回。这个功能带来的直接好处就是当我们需要传递行为的时候，不必在跟之前一样为了传递行为而引入一个对象。例如在Java 8之前，当我们想排序一个List时：
+List&amp;lt;Integer&amp;gt; values = newArrayList(11, 2, 43, 14, 5, 76, 6); Collections.sort(values, new Comparator&amp;lt;Integer&amp;gt;() { @Override public int compare(Integer one, Integer other) { return one.compareTo(other); } }); Java 8引入了Lambda之后，我们不必再引入一个对象来封装我们的排序逻辑：
+Collections.sort(values, (a, b) -&amp;gt; a.compareTo(b)); 本质上讲，传递进来的还是一个对象，只不过是因为Functional Interface的存在，我们可以假装传入的是一个函数。这一点在我们使用传入的对象时就更为明显: 我们不得不像使用对象一样通过调用apply方法来应用传入的函数。
+public static &amp;lt;T&amp;gt; T create(String stringValue, Function&amp;lt;String, T&amp;gt; instantiator) { return instantiator.apply(stringValue); } 在纯粹的函数式编程语言中，高阶函数的使用则更为自然， 如在haskell中，
+add :: a -&amp;gt; a -&amp;gt; a add a b = a + b perform :: a -&amp;gt; a -&amp;gt; (a -&amp;gt; a -&amp;gt; a) -&amp;gt; a perform a b action = action a b let result = perform 1 1 add // result = 2 既然函数可以作为参数传递，也可以作为返回值，那么函数之间的运算也就不足为奇了。以下是Haskell中用来组合（compose）函数的函数(对，这里没有写错，就是通过组合函数来生成更强大函数)。</description>
+    </item>
+    
+    <item>
+      <title>持续集成介绍</title>
+      <link>https://ddou.github.io/posts/continuous-integration-introduction/</link>
+      <pubDate>Sun, 10 Jan 2016 23:24:57 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/continuous-integration-introduction/</guid>
+      <description>近期客户到访，按客户要求，做了持续集成方面的session分享。持续集成在ThoughtWorks每个项目中算是标准配置，必不可少，自己所在项目持续集成也是做的风生水起。正好依此为契机，总结下过去在持续集成方面的知识。有兴趣的朋友，可以参考持续集成简介。
+欢迎探讨。</description>
+    </item>
+    
+    <item>
+      <title>你应该知道的Gmail</title>
+      <link>https://ddou.github.io/posts/the-gmail-feature-you-should-know/</link>
+      <pubDate>Sun, 20 Dec 2015 00:01:32 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/the-gmail-feature-you-should-know/</guid>
+      <description>平日工作都是使用 Gmail 作为主力邮箱。虽然网页版因为要频繁登录，而多有不便，但在尝试了多种邮件客户端后，终究还是因为怀念 Gmail 网页版的强大功能，继续使用网页版。趁这个周末忙里偷得半日闲，暂且记录下自己在使用 Gmail 时的一些心得。
+标签 Label 标签功能在不少邮箱产品中都支持，比如 Outlook，QQ Mail 等。使用标签功能，可以很方便的对邮件进行分类。Gmail 中的标签可以在左侧列表中显示，这样就可以很方便的通过点击相应标签，找到对应的邮件列表。
+另外，Gmail 的标签是支持层次的，所以可以按照自己的需要对标签进行组织，比如可以把各种通知邮件，如账单，快递进度提醒，论坛提醒，订阅邮件等按照不同标签如“账单”、“提醒”、“订阅”等，组织在“通知”标签下，使邮件组织更加清晰明了。
+自定义收件箱 Inbox Gmail 中可以对收件箱中邮件的显示进行配置。默认，Gmail 提供了 5 中类型的配置，分别是默认，重要优先，未读优先，加星标优先，和优先级邮件优先。对每一种类型，都可以在此基础上做配置。我个人还是比较喜欢优先级邮件优先。在原有配置的基础上，做些许改动：
+按照上面的配置，收件箱中邮件会按照如下显示：
+ 系统识别为重要的邮件以及未读邮件 All Action 这部分是所有 Label 为 Action 的邮件，也就是需要我采取下一步行动的邮件，比如稍后需要回复，需要预定会议室等等。 其他已读的邮件。  上述配置的好处就是每次进入收件箱，该做什么都一目了然了。
+过滤器 Filters 有 Label 功能固然好，但是如果 Label 都要手动添加上去的话，这个功能的作用就大打折扣了。Gmail 中 Filter 才是让 Label 威力无限的催化剂。
+通过自定义 Filter，我们可以做些什么呢？
+ 跳过 Inbox，直接归档不重要的邮件 删除邮件 给邮件加星标 给邮件加 Label 自动 forward 邮件 &amp;hellip;  自定义 Filter，然后给符合某种规则的邮件自动添加 Label，自动归档，可以让邮件自动归类，把重要邮件从无足轻重的邮件堆里面标记出来，方便更高效的邮件处理。
+Filter 的规则可以针对邮件的发件人，收件人，邮件标题，邮件大小，以及内容进行设置。如以下规则：
+// 当发件人是ddou或者andytesii时，匹配 FROM: ddou@qq.</description>
+    </item>
+    
+    <item>
+      <title>一个NullPointerException引发的思考</title>
+      <link>https://ddou.github.io/posts/thoughts-on-a-null-pointer-exception/</link>
+      <pubDate>Sun, 26 Oct 2014 16:19:35 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/thoughts-on-a-null-pointer-exception/</guid>
+      <description>近日在做项目中导出功能的重构，在中间执行单元测试验证功能时，出现一个java.lang.NullPointerException。这个异常对于每日与Exception和Bug打交道的同学们来说，是再熟悉不过的了。NullPointerException，亦即空指针异常，这是当在一个null对象上调用某个方法引起的。按图索骥，定位了产生异常的那行代码。错误信息和代码如下所示（写了个简单的，方便演示）：
+Exception in thread &amp;#34;main&amp;#34; java.lang.NullPointerException at BuildingFeatures.getBedRooms(BuildingFeatures.java:8) at Test.main(Test.java:4) System.out.printl(buildingFeatures.getBedrooms()); 分析 根据经验来讲，这无疑是讲buildingFeatures这个变量是null。于是乎，设断点，重新执行测试，让我意外的是buildingFeatures竟然不是null？WTF？一瞬间，我陷入了陈思、迷茫，多年编程构建起来的世界观，价值观开始慢慢地松动、塌陷。
+时间还在继续，无奈，虽然简单如一个getter方法，还是跟进去一探究竟吧。BuildingFeatures只是一个简单的类，典型的贫血模型，除了几个field，默认构造函数，以及对应的getter和setter，再无其他了。
+public class BuildingFeatures { private Integer bedRooms; public BuildingFeatures() { } public int getBedRooms() { return bedRooms; } public void setBedRooms(Integer bedRooms) { this.bedRooms = bedRooms; } } 狐狸再狡猾，也逃不过猎人的眼睛，终于还是被我发现了问题之所在。问题出在了getter的返回值上。getter返回的是一个int，原始类型，而bedRooms这个field的类型是Integer，在getter内会进行类型的转换，也就是所谓的“拆箱”。要将一个null的Integer值拆箱，抛出一个NullPointerException也就不足为奇了。那getter中具体执行了哪些操作导致这个NullPointerException呢？ 我们还是从编译产生的bytecode中一探究竟吧。
+深入分析 javap是一个用来反编译java类文件的小工具，在java的默认安装中有提供。通过如下命令可以看下getter中都执行了哪些操作：
+javap -c out/production/untitled/BuildingFeatures.class 以下是输出：
+public class BuildingFeatures { public BuildingFeatures(); Code: 0: aload_0 1: invokespecial #1 // Method java/lang/Object.&amp;quot;&amp;lt;init&amp;gt;&amp;quot;:()V 4: return public int getBedRooms(); Code: 0: aload_0 1: getfield #2 // Field bedRooms:Ljava/lang/Integer; 4: invokevirtual #3 // Method java/lang/Integer.</description>
+    </item>
+    
+    <item>
+      <title>RSpec优雅验证之Predicate Matcher</title>
+      <link>https://ddou.github.io/posts/meaningful-rspec-predicate/</link>
+      <pubDate>Sat, 08 Mar 2014 22:44:00 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/meaningful-rspec-predicate/</guid>
+      <description>Ruby作为动态语言，以其灵活性在测试领域大放异彩。RSpec作为Ruby中使用最广泛的测试工具之一，实在是广大码农们居家旅行测试验证之必备神器。RSpec提供了强大灵活的验证器(mather)，使用这些验证器加上Ruby灵活的语法可以写出类似于自然语言的验证，例如：
+result_list.should include(item) result.should equal(item) person.name.should == &amp;#39;ddou&amp;#39; 上述验证写法自然看起来赏心悦目，但如下的写法就太不ruby了，估计rubyist看到了多少会有些反胃：
+person.manager?.should be_true detail_view.toggleable?.should == true detail_view.has_photo?.should == true 对于上述验证，一个rubyist所喜闻乐见的验证写法应该是这样的：
+person.should be_manager detail_view.should be_toggleable detail_view.should have_photo 这样的写法是不是看起来更自然，更符合人类自然语言的习惯？强大如RSpec者自然支持上述语法。RSpec提供了对Predicate Matcher的支持，即可以使用被验证对象自身提供的predicate方法作为验证器。 常见的predicate方法如Array.empty?，以及我们上面例子中的 Person.manager?，DetailView.toggleable?，DetailView.has_photo?等。
+Predicate Matcher实现 下面我们就打开RSpec源码，看看Predicate Matcher是如何实现。
+上例中我们并没有定义be_manager，be_toggleable方法，RSpec自然要依赖Ruby的强大元编程能力来实现魔法。打开rspec-expectation包下lib/rspec/matchers/method_missing.rb文件，我们可以看到如下逻辑：
+def method_missing(method, *args, &amp;amp;block) return Matchers::BuiltIn::BePredicate.new(method, *args, &amp;amp;block) if method.to_s =~ /^be_/ return Matchers::BuiltIn::Has.new(method, *args, &amp;amp;block) if method.to_s =~ /^have_/ super end 以上例中be_manager为例，此情况下RSpec会创建一个Matchers::BuiltIn::BePredicate实例，should会使用该BePredicate来验证我们的期望值。下面我们顺藤摸瓜看下BePredicate是如何工作的：
+ 解析出验证使用的Predicate方法的名字，$3返回即是。对于上例中be_manager，此处返回&amp;quot;manager&amp;rdquo;。  def prefix_and_expected(symbol) symbol.to_s =~ /^(be_(an?_)?)(.*)/ return $1, $3 end  将上述方法名字转化为实际使用的Predicate方法对应的符号（Symbol）。根据时态的不同，还会在Predicate方法名后添加s。  def predicate &amp;#34;#{@expected}?</description>
+    </item>
+    
+  </channel>
+</rss>
