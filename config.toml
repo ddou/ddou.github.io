@@ -1,4 +1,4 @@
-baseURL = "https://ddou.github.io"
+baseURL = "https://ddou.github.io/"
 languageCode = "en-us"
 title = "子不语"
 theme = "contrast-hugo"
