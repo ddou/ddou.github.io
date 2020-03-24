@@ -1,16 +1,17 @@
-{{- define "main" -}}
+{{ define "main" }}
 
-<h1>{{ .Title | markdownify }}</h1>
-<p>
-  <small class="text-secondary">
-  {{ $customDateFormat := "January 2, 2006" }}
-  {{ with .Site.Params.customDateFormat }}{{ $customDateFormat = . }}{{ end }}
-  {{ .PublishDate.Format $customDateFormat }}{{ if gt .Lastmod .PublishDate }}, updated {{ .Lastmod.Format $customDateFormat }}{{ end }}
-  </small>
-  {{ partial "tags" . }}
-</p>
-{{ .Content }}
-
+<article>
+  <header>
+    {{ range $index, $tag := .Params.categories }}
+    {{- if gt $index 0 }}, {{ end -}}
+    <a href="{{ ($.Site.GetPage (printf "/%s/%s" "categories" $tag)).Permalink }}">{{ $tag | upper }}</a>
+    {{- end -}}
+    <h1>{{ .Title }}</h1>
+    {{ if .Date }}<time
+      datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "January 02, 2006" }}</time>{{ end }}
+      {{ partial "tags" . }}
+  </header>
+  {{ .Content }}
+</article>
 {{ partial "disqus" . }}
-
-{{- end -}}
+{{ end }}
