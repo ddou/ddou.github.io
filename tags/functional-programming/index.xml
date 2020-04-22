@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Functional Programming on 子不语</title>
+    <link>https://ddou.github.io/tags/functional-programming/</link>
+    <description>Recent content in Functional Programming on 子不语</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 19 Mar 2016 11:43:26 +0800</lastBuildDate>
+    
+	<atom:link href="https://ddou.github.io/tags/functional-programming/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>函数式编程初体验 (3)</title>
+      <link>https://ddou.github.io/posts/functional-programming-in-real-world-3/</link>
+      <pubDate>Sat, 19 Mar 2016 11:43:26 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/functional-programming-in-real-world-3/</guid>
+      <description>书接上回。在上篇文章中，我们的火星探测器已经可以解析命令字符串，并且按照命令执行探测任务。新的功能要求我们在这个基础上，增加记录探测器历史位置信息的功能，以保留一份活动位置记录，以避免后期在某个区域重复探测。
+分析 使用我们主流的编程语言，上述功能可以很简单的实现，比如采用如下两个方式：
+ 定义一个全局变量，保存历史位置信息，每次移动探测器时，添加最近的位置信息 在MarsRover类中新添一个变量，保存历史位置信息，每次移动都将最近的位置信息添加到变量中  上述两种方式都可以正确的实现功能。但是在我们函数式编程的大背景下，使用是上述任一种方式，都是与函数式编程的理念相违背的： 纯函数的实现是没有副作用的，即不会修改全局状态，也不会修改参数的状态。那有什么办法呢？
+不论使用何种范式的编程语言，有一些公共的问题都是在程序中需要解决的，例如异常处理，IO，全局状态等需要副作用的场景。只是不同的语言解决问题的方式不同。函数式编程在解决如上述问题时，有自己的思路。Monad就是函数式编程语言用来解决上述问题的利器。
+Monad 从本质上理解Monad，需要范畴论（Category Theory）的知识，这也导致了Monad不太容易理解。简单的讲，Monad是封装了一个计算上下文(Computation Context), 正是因为这一点，monad也被称为“可编程的分号”。
+有一个类型的Monad，大部分人都应该都有过了解。那就是Maybe Monad。Maybe在很多语言里面都有对应的实现。Java 8中对应的实现为java.util.Optional。Optional代表一个可能存在的值，针对两种不同的存在状态，同一个方法调用会有不同的执行逻辑， 例如：
+Optional&amp;lt;Integer&amp;gt; integer = Optional.of(&amp;#34;123&amp;#34;).map(str -&amp;gt; Integer.parseInt(str)); Optional&amp;lt;Integer&amp;gt; empty = Optional.&amp;lt;String&amp;gt;empty().map(str -&amp;gt; Integer.parseInt(str)); 如果我们查看Optional的源码，可以看到map方法的实现，针对了两种不同的存在状态做了不同的处理。这就是Optional所包含的所谓计算上下文，也是Monad的价值所在。
+public&amp;lt;U&amp;gt; Optional&amp;lt;U&amp;gt; map(Function&amp;lt;? super T, ? extends U&amp;gt; mapper) { Objects.requireNonNull(mapper); if (!isPresent()) return empty(); else { return Optional.ofNullable(mapper.apply(value)); } } 类似的，我们也可以通过Monad来实现保存MarsRover的历史位置数据。
+实现 首先，我们先定义Log数据类型。 按照功能要求，我们的Log是一些列的坐标点。
+type Log = [Point] 然后，我们定义一个自己的monad：
+newtype Logger a = Logger (a, Log) deriving (Show) execLogger :: Logger a -&amp;gt; (a, Log) execLogger (Logger (a, log)) = (a, log) record :: MarsRover -&amp;gt; Logger MarsRover record marsRover = Logger (marsRover, [point]) where point = getPosition marsRover 我们定义的monad是一个新的数据类型Logger，包含了MarsRover实例，和它对应的历史位置信息。同时，我们定义了:</description>
+    </item>
+    
+    <item>
+      <title>函数式编程初体验 (2)</title>
+      <link>https://ddou.github.io/posts/functional-programming-in-real-world-2/</link>
+      <pubDate>Sat, 27 Feb 2016 21:58:43 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/functional-programming-in-real-world-2/</guid>
+      <description>在上篇文章中，我们实现的MarsRover已经支持三种基本命令操作了。这次我们来稍微完善下，添加从字符串解析出命令的功能。
+分析 传入的指令是一个字符串，每个字符对应一个命令。探测器支持的命令只有L，R和M。当遇到不支持的字符时，探测器不作出任何响应。在一般的编程语言中，可能会使用异常来处理无法支持的命令的情况。那么在Haskell中，我们有什么新的武器可以使用吗？ Yes， 那就是Maybe monad.
+Maybe类型代表一种有状态的数据，亦即这个数据存在，也可能不存在。Maybe类型有两个值： Just a&#39;和Nothing，分别对应了两种状态。那么在我们的问题中，我们可以让解析函数返回一个Maybe类型，当返回的是Just时，表示返回的是一个支持的命令；当返回Nothing时，表示遇到不支持的命令。
+实现 基于上面的分析，我们的parse函数可以实现如下：
+parse :: Char -&amp;gt; Maybe Command parse c = case c of &amp;#39;L&amp;#39; -&amp;gt; Just L &amp;#39;R&amp;#39; -&amp;gt; Just R &amp;#39;M&amp;#39; -&amp;gt; Just M _ -&amp;gt; Nothing parse函数接收一个字符，返回一个Maybe Command。这里又一次使用了模式匹配。当遇到不支持的命令时，返回一个Nothing。
+如此一来，我们的execute的实现也要做对应的改动，以支持Maybe类型的参数。之前的定义如下：
+execute :: MarsRover -&amp;gt; Command -&amp;gt; MarsRover execute rover command = case command of L -&amp;gt; turnLeft rover R -&amp;gt; turnRight rover M -&amp;gt; move rover 为了接收Maybe类型的参数，我们修改为如下:
+run :: Maybe Command -&amp;gt; MarsRover -&amp;gt; MarsRover run command rover = case command of Just L -&amp;gt; turnLeft rover Just R -&amp;gt; turnRight rover Just M -&amp;gt; move rover Nothing -&amp;gt; rover 新的实现中，我们把execute重命名为run，并且修改了参数的顺序和类型。当run遇到Nothing的时候，他什么都不做，只是返回原始的rover实例。</description>
+    </item>
+    
+    <item>
+      <title>函数式编程初体验 （1）</title>
+      <link>https://ddou.github.io/posts/functional-programming-in-real-world/</link>
+      <pubDate>Sat, 27 Feb 2016 21:58:43 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/functional-programming-in-real-world/</guid>
+      <description>在之前的两篇函数式编程语言特性的文章（上篇和下篇）中简单介绍了一些基本的函数式编程的概念。对函数式编程有了一些基本的概念，那现实中的函数式编程是什么样子的呢？这里就选取一个比较简单的问题，使用Haskell尝试解决一下，以求近距离的感受下函数之美。
+问题 这里采用的是我司一个废弃了很久的面试题目MarsRover，题目内容如下：
+ A squad of robotic rovers are to be landed by NASA on a plateau on Mars. This plateau, which is curiously rectangular, must be navigated by the rovers so that their on-board cameras can get a complete view of the surrounding terrain to send back to Earth. A rover&amp;rsquo;s position and location is represented by a combination of x and y co-ordinates and a letter representing one of the four cardinal compass points.</description>
+    </item>
+    
+    <item>
+      <title>函数式编程 101 (续)</title>
+      <link>https://ddou.github.io/posts/functional-programming-concepts-part-two/</link>
+      <pubDate>Mon, 18 Jan 2016 21:57:55 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/functional-programming-concepts-part-two/</guid>
+      <description>上一篇提到了函数式编程语言的两个特点。这里书接上回，我们继续探讨函数式编程语言的其他特点。
+尾递归 递归是我们在编程中处理集合时经常用的到的一个技巧，使用递归相对于循环来说可以更容易的实现功能。比如说求一个整数num的阶乘，采用递归可以实现如下：
+private static Integer factorial(int num) { if (num == 1) { return 1; } return num * factorial(num - 1); } Integer result = factorial(10); // result = 3628800 上述递归的实现清晰易懂，结果正确。但是一个问题是，每当factorial调用自身时，如当num=8时，都会在调用堆栈上保存当前的执行上下文，当回调结束时以计算当前num(8)和factorial(7)的乘积。我们知道 每个程序在执行时，系统分配的堆栈大小都是有限制的。当回调足够多时，如num大，就可能出现堆栈溢出的错误。
+一个解决该问题的办法就是采用尾递归。比如采用尾递归的方式实现阶乘计算如下：
+private static Integer factorial2(int accu, int num) { if (num == 1) { return accu; } return factorial2(accu * num, num - 1); } Integer result = factorial2(1, 10); // result = 3628800 上述factorial2的实现中，中间的计算结果是以参数accu的方式传递给递归调用的函数，此时无需等递归函数调用结束再计算，故无需保存调用上下文，避免了堆栈操作，也就避免了因递归调用太多而导致的堆栈溢出问题。
+对集合进行操作是编程中的一个永恒主题。函数式编程语言中内置了许多对集合进行操作的函数，其中很多都是采用尾递归式的实现。如haskell中求阶乘:</description>
+    </item>
+    
+    <item>
+      <title>函数式编程 101</title>
+      <link>https://ddou.github.io/posts/functional-programming-concepts/</link>
+      <pubDate>Tue, 12 Jan 2016 21:07:54 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/functional-programming-concepts/</guid>
+      <description>函数式编程这几年变得越来越流行起来，越来越多的语音融入了函数式编程的语法，就连更新缓慢如Java也不例外，在Java8中引入了函数式编程的语法。JVM平台的后起之秀Scala，Groovy更是出生之初就有内置了对函数式编程的支持。作为最经常被拿来与Java做比较的C#，更是抢先一步在.NET 3.5版本时就有了对函数式编程的支持。后来.NET平台上更是直接引入了函数式编程语言F#。
+函数式编程的兴起并非没有原因。
+ 函数式编程语言一般极具表现力. 相比主流的面向对象语言能以极少的代码完成相同的工作。与代码量的减少相对应的就是维护成本的降低。 相对于命令式编程，函数式编程语言都是采用声明式编程的方式，能在更高的抽象级别上编程，代码更易于理解。 **纯函数是没有副作用的，既不会修改全局状态，也不会修改传入的参数。**在进行多线程编程时，就从根本上避免死锁，活锁或者是线程饥饿的问题。  函数式编程语言的特征 高阶函数 在函数式编程语言中，函数终于成为一等公民，可以跟变量一样作为参数传递，同时也可以作为函数返回值返回。这个功能带来的直接好处就是当我们需要传递行为的时候，不必在跟之前一样为了传递行为而引入一个对象。例如在Java 8之前，当我们想排序一个List时：
+List&amp;lt;Integer&amp;gt; values = newArrayList(11, 2, 43, 14, 5, 76, 6); Collections.sort(values, new Comparator&amp;lt;Integer&amp;gt;() { @Override public int compare(Integer one, Integer other) { return one.compareTo(other); } }); Java 8引入了Lambda之后，我们不必再引入一个对象来封装我们的排序逻辑：
+Collections.sort(values, (a, b) -&amp;gt; a.compareTo(b)); 本质上讲，传递进来的还是一个对象，只不过是因为Functional Interface的存在，我们可以假装传入的是一个函数。这一点在我们使用传入的对象时就更为明显: 我们不得不像使用对象一样通过调用apply方法来应用传入的函数。
+public static &amp;lt;T&amp;gt; T create(String stringValue, Function&amp;lt;String, T&amp;gt; instantiator) { return instantiator.apply(stringValue); } 在纯粹的函数式编程语言中，高阶函数的使用则更为自然， 如在haskell中，
+add :: a -&amp;gt; a -&amp;gt; a add a b = a + b perform :: a -&amp;gt; a -&amp;gt; (a -&amp;gt; a -&amp;gt; a) -&amp;gt; a perform a b action = action a b let result = perform 1 1 add // result = 2 既然函数可以作为参数传递，也可以作为返回值，那么函数之间的运算也就不足为奇了。以下是Haskell中用来组合（compose）函数的函数(对，这里没有写错，就是通过组合函数来生成更强大函数)。</description>
+    </item>
+    
+  </channel>
+</rss>
