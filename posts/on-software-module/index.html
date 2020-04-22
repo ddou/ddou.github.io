@@ -138,12 +138,12 @@
     <span style="color:#75715e">//......
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 </code></pre></div><p>当需要支持其他不同类型的输出格式时，我们可以很方便的添加<code>Outputter</code>的实现，而不必修改<code>Calculator</code>。如此，我们在遵循了DIP的同时，代码也更加符合OCP(开闭原则)。</p>
-<p>通过引入一个间接层（<code>Outputter</code>接口）来隔离变化，这是面向对象中非常普遍的做法。它能带来隔离变化的好处，但也导致了额外的复杂度。</p>
+<p>通过引入一个间接层（<code>Outputter</code>接口）来隔离变化，这是面向对象中非常普遍的做法。它能带来隔离变化的好处，但也导致了额外的复杂度。在引入间接层时，应该保持克制，只在必要的时候才这么做。</p>
 <blockquote>
 <p>There is no problem in computer science that can&rsquo;t be solved using another level of indirection&hellip;except too many levels of indiretion.</p>
 </blockquote>
-<p>在Ports and Adapters架构中，通过ports来隔离外部变化，外部系统需要通过提供adapter的方式与port交互。</p>
-<p>类似的，在领域驱动设计中，防腐层(anti-corruption layer)也是一个间接层，防腐层对两套系统之间的概念模型以及功能行为的转换进行了合理封装，并且能够确保其中一个系统的领域层不会依赖于另一系统。引入防腐层后，外部系统中模型和功能的变化不会传递到本系统中，降低了系统开发和维护的复杂度。</p>
+<p>在Ports and Adapters架构中，通过Port来提供接口给外部，同时隔离外部变化，外部系统需要通过提供Adapter的方式与Port交互。</p>
+<p>类似的，在领域驱动设计中，防腐层(anti-corruption layer)也是一个间接层。防腐层对两套系统之间的数据模型以及功能行为的转换进行了合理封装，并且能够确保其中一个系统的领域层不会依赖于另一系统。引入防腐层后，外部系统中模型和功能的变化不会传递到本系统中，降低了系统开发和维护的复杂度。</p>
 <h2 id="简单设计">简单设计</h2>
 <p>最好的解决问题的办法就是不要引入问题。也就是降低实现中不必要的复杂度。遵循整洁代码可以让我们在细节层面写出更清晰易懂的代码。遵循Simple Design的原则，减少不必要的复杂度。简单设计中提出了4个要求：</p>
 <ol>
