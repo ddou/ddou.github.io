@@ -1,8 +1,8 @@
 ---
 title: "我的2021"
 date: 2022-01-07T23:42:02+08:00
-publishdate: 2019-12-30
-lastmod: 2019-12-30
+publishdate: 2022-01-08
+lastmod: 2022-01-07T23:42:02+08:00
 draft: false
 tags: ["Growth"]
 keywords: ["2021", "retro"]
