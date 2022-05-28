@@ -110,7 +110,8 @@ private String renderPipelineScript(JenkinsPipeline pipeline) {
 - 设置`executionRule`默认值
 - 设置每个`stage`的`QualityGate` 默认值
 - 渲染每个`step`
-  阅读时，也不用假装自己是人肉编译器，需要在脑子里模拟执行才能知道完成了什么操作。
+
+阅读时，也不用假装自己是人肉编译器，需要在脑子里模拟执行才能知道完成了什么操作。
 
 本次重构中值得分享的几点小技巧：
 
