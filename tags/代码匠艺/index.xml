@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>代码匠艺 on 子不语</title>
+    <link>https://ddou.github.io/tags/%E4%BB%A3%E7%A0%81%E5%8C%A0%E8%89%BA/</link>
+    <description>Recent content in 代码匠艺 on 子不语</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 28 May 2022 18:01:31 +0800</lastBuildDate><atom:link href="https://ddou.github.io/tags/%E4%BB%A3%E7%A0%81%E5%8C%A0%E8%89%BA/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>从丑到美： 简化 Lambda 操作</title>
+      <link>https://ddou.github.io/posts/simplify-lambda-operation/</link>
+      <pubDate>Sat, 28 May 2022 18:01:31 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/simplify-lambda-operation/</guid>
+      <description>作为软件工程师， 工作的大部分时间我都在写代码，或者阅读别人的代码。期间，看到过许多优雅的代码，也见过糟糕的实现。 这个代码匠艺系列会分享一些优雅的实现，以及代码重构的经历。
+本篇为该系列的第一篇。
+Java 8 为集合类操作引入了 Stream。 可以创建 Stream 或者将集合类转化为 Stream 实例，通过传入 Lambda 表达式实现一系列的过滤、转化操作。理想情况下，Stream 和 Lambda 相结合可以写出清晰易懂的代码。但现实情况并非总是如此。比如下面这段代码：
+private String renderPipelineScript(JenkinsPipeline pipeline) { PipelineScript pipelineScript = pipeline.renderScript(); pipelineScript.setExecutionRule(nonNull(pipeline.getExecutionRule()) ? pipeline.getExecutionRule() : &amp;#34;STOP&amp;#34;); ofNullable(pipelineScript.getStages()).ifPresent(stages -&amp;gt; stages.forEach(stage -&amp;gt; { stage.setQualityGateType(isNull(stage.getQualityGateType()) ? LanguageType.Maven : stage.getQualityGateType()); stage.setQualityGateContainer(isNull(stage.getQualityGateContainer()) ? &amp;#34;maven:3.8.4-jdk-11&amp;#34; : stage.getQualityGateContainer()); ofNullable(stage.getSteps()).ifPresent(steps -&amp;gt; steps.forEach(this::renderStepScript)); })); return ciScriptTemplateHelper.renderPipelineScriptByTemplate(pipelineScript, &amp;#34;pipeline-script.ftl&amp;#34;); } 不难看出，这段代码是在一个持续集成流水线的限界上下文内，有一个 Pipeline 的模型大致如下。这段代码在将 Pipe 模型定义的流水线转化为 Jenkins 的流水线配置文件。
+代码逻辑并不复杂，但阅读起来多少还是有些障碍，不够顺畅：
+ 嵌套的 Optional，isPresent, forEach 操作 stage的forEach内 lambda 操作略显复杂，不太能清晰。  下面就对上述代码做简单重构，以简化其阅读障碍，使之更清晰易懂。</description>
+    </item>
+    
+  </channel>
+</rss>

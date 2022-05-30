@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Practices on 子不语</title>
+    <link>https://ddou.github.io/tags/practices/</link>
+    <description>Recent content in Practices on 子不语</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 10 Jan 2016 23:24:57 +0800</lastBuildDate><atom:link href="https://ddou.github.io/tags/practices/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>持续集成介绍</title>
+      <link>https://ddou.github.io/posts/continuous-integration-introduction/</link>
+      <pubDate>Sun, 10 Jan 2016 23:24:57 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/continuous-integration-introduction/</guid>
+      <description>近期客户到访，按客户要求，做了持续集成方面的session分享。持续集成在ThoughtWorks每个项目中算是标准配置，必不可少，自己所在项目持续集成也是做的风生水起。正好依此为契机，总结下过去在持续集成方面的知识。有兴趣的朋友，可以参考持续集成简介。
+欢迎探讨。</description>
+    </item>
+    
+  </channel>
+</rss>

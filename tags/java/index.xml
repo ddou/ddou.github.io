@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java on 子不语</title>
+    <link>https://ddou.github.io/tags/java/</link>
+    <description>Recent content in Java on 子不语</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 28 May 2022 18:01:31 +0800</lastBuildDate><atom:link href="https://ddou.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>从丑到美： 简化 Lambda 操作</title>
+      <link>https://ddou.github.io/posts/simplify-lambda-operation/</link>
+      <pubDate>Sat, 28 May 2022 18:01:31 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/simplify-lambda-operation/</guid>
+      <description>作为软件工程师， 工作的大部分时间我都在写代码，或者阅读别人的代码。期间，看到过许多优雅的代码，也见过糟糕的实现。 这个代码匠艺系列会分享一些优雅的实现，以及代码重构的经历。
+本篇为该系列的第一篇。
+Java 8 为集合类操作引入了 Stream。 可以创建 Stream 或者将集合类转化为 Stream 实例，通过传入 Lambda 表达式实现一系列的过滤、转化操作。理想情况下，Stream 和 Lambda 相结合可以写出清晰易懂的代码。但现实情况并非总是如此。比如下面这段代码：
+private String renderPipelineScript(JenkinsPipeline pipeline) { PipelineScript pipelineScript = pipeline.renderScript(); pipelineScript.setExecutionRule(nonNull(pipeline.getExecutionRule()) ? pipeline.getExecutionRule() : &amp;#34;STOP&amp;#34;); ofNullable(pipelineScript.getStages()).ifPresent(stages -&amp;gt; stages.forEach(stage -&amp;gt; { stage.setQualityGateType(isNull(stage.getQualityGateType()) ? LanguageType.Maven : stage.getQualityGateType()); stage.setQualityGateContainer(isNull(stage.getQualityGateContainer()) ? &amp;#34;maven:3.8.4-jdk-11&amp;#34; : stage.getQualityGateContainer()); ofNullable(stage.getSteps()).ifPresent(steps -&amp;gt; steps.forEach(this::renderStepScript)); })); return ciScriptTemplateHelper.renderPipelineScriptByTemplate(pipelineScript, &amp;#34;pipeline-script.ftl&amp;#34;); } 不难看出，这段代码是在一个持续集成流水线的限界上下文内，有一个 Pipeline 的模型大致如下。这段代码在将 Pipe 模型定义的流水线转化为 Jenkins 的流水线配置文件。
+代码逻辑并不复杂，但阅读起来多少还是有些障碍，不够顺畅：
+ 嵌套的 Optional，isPresent, forEach 操作 stage的forEach内 lambda 操作略显复杂，不太能清晰。  下面就对上述代码做简单重构，以简化其阅读障碍，使之更清晰易懂。</description>
+    </item>
+    
+    <item>
+      <title>简析Spring Security</title>
+      <link>https://ddou.github.io/posts/on-spring-security-architecture/</link>
+      <pubDate>Fri, 13 May 2022 16:42:02 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/on-spring-security-architecture/</guid>
+      <description>Spring Security 提供了灵活简便的方式进行服务安全相关的配置。如下，只需要简单几行代码即可完成一个基于 JWT Token 的 API 服务的认证设置：
+@Configuration public class SecurityConfiguration extends WebSecurityConfigurerAdapter { @Override protected void configure(HttpSecurity http) throws Exception { http.authorizeRequests() .antMatchers(&amp;#34;/api/login&amp;#34;).permitAll() .anyRequest().authenticated() .and() .addFilterAt(new JWTAuthFilter(), BasicAuthenticationFilter.class); } } ​ 上述配置允许/api/login 匿名访问，其他所有 endpoint 都必须通过身份认证后使用。身份认证基于 JWT Token 实现， JWTAuthFilter 负责验证请求头中是否包含有效的身份认证信息。
+​ 那么 Spring Security 提供灵活强大的配置方式背后，具体是怎么工作的呢？ 上述寥寥几行代码背后隐藏着哪些魔法呢？下面首先我们从 Spring Securtiy 的工作机制聊起。
+Spring Security 工作机制 ​ Spring Security 对 Servlet 的安全实现时基于 Servlet Filter 实现的。首先，我们来看下一个典型的请求处理流程：
+SpringMVC 应用在在处理 Web 请求时，会创建一个FilterChain，包含了一些列的 Filter 和与该请求 URI 匹配的 Servlet （DispatcherServlet）。 Spring Security 通过在处理请求的 FilterChain 中插入 security 相关的 Filter 来实现其功能：</description>
+    </item>
+    
+    <item>
+      <title>闲谈软件系统中的复杂度</title>
+      <link>https://ddou.github.io/posts/on-software-module/</link>
+      <pubDate>Tue, 21 Apr 2020 22:50:34 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/on-software-module/</guid>
+      <description>现在的软件项目大多越来越复杂，随着上线时间日久，业务持续变更，开发人员一波一波的轮换，产品到后期时，改动日渐困难，上线时间遥遥无期。类似的系统之所以复杂， 其中部分原因是由于业务本身的复杂性，另外一部分的复杂度则是来自于开发阶段，也就是说由开发阶段不合理的设计和实现引入的。 不合理的设计和实现导致系统僵硬和脆弱，难以修改，难以重用，容易出错。模块化是应对复杂系统的一种常用办法。
+模块化 分而治之是我们在面临复杂问题时常用的应对手法。按照MECE的原则，我们把复杂问题分解为一个个更简单的小问题，然后各个击破。微服务设计中的做法是把整个问题域划分为多个子域，每个子域对应一个受限上下文(bounded context), 进而每个受限上下文可以对应到一个微服务。每个微服务有各自的职责，包含该问题子域内的业务逻辑。多个微服务之间协作共同为上层提供业务能力。
+在单个组件内部，代码被组织到不同的模块内。模块级别的实现上，则是把模块职责做更细的划分，对应到不同的类实现不同的职责。
+模块之间通过提供的接口彼此交互。模块可以以不同的形式对外提供接口：
+ API 外部可访问的数据结构 外部可访问的函数 共享文件或内存  模块之间的耦合的方式也会因不同的接口方式而有所不同。模块化带来最大的好处是通过接口来提供其功能，而隐藏了功能的实现细节。模块的使用者仅仅关心接口的使用，而不必关注于功能的实现方式。基于模块化的系统设计，能带来显而易见的好处：
+高层次快速理解系统结构
+通过梳理系统模块结构，理清各个模块的职责，对外提供的接口，我们可以快速从高层次快速理解系统的结构。C4 模型是经常用来可视化系统架构一个工具。其中的组件图(Component Diagram)就展示了系统模块结构：
+细节层面的功能开发
+当深入代码细节时，开发人员这更多关注于当前模块，而不必关心所依赖模块的细节。这样就避免了将太多逻辑装载进脑中，降低认知复杂度。
+有了模块和接口，模块间互相配合也完成了功能，然后呢？
+简单接口 Java 开发人员对 Java 中文件读取的操作应该都有很深刻的印象：
+FileInputStream fileStream = new FileInputStream(fileName); BufferedInputStream bufferedStream = new BufferedInputStream(fileStream); ObjectInputStream objectStream = new ObjectInputStream(bufferedStream); 当我们想读取一个包含序列化对象的文件时，必须要手动构建一个FileInputStream, BufferedInputStream， 然后才是ObjectInputStream。虽然这样的设计提供了足够的灵活度，但对用户而言，这是非常的不友好。
+在《软件设计的哲学》中，John Ousterhout 提出 Deep Module 的概念：
+ “The best modules are deep: they allow a lot of functionality to be accessed through a simple interface.</description>
+    </item>
+    
+    <item>
+      <title>一个NullPointerException引发的思考</title>
+      <link>https://ddou.github.io/posts/thoughts-on-a-null-pointer-exception/</link>
+      <pubDate>Sun, 26 Oct 2014 16:19:35 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/thoughts-on-a-null-pointer-exception/</guid>
+      <description>近日在做项目中导出功能的重构，在中间执行单元测试验证功能时，出现一个java.lang.NullPointerException。这个异常对于每日与Exception和Bug打交道的同学们来说，是再熟悉不过的了。NullPointerException，亦即空指针异常，这是当在一个null对象上调用某个方法引起的。按图索骥，定位了产生异常的那行代码。错误信息和代码如下所示（写了个简单的，方便演示）：
+Exception in thread &amp;#34;main&amp;#34; java.lang.NullPointerException at BuildingFeatures.getBedRooms(BuildingFeatures.java:8) at Test.main(Test.java:4) System.out.printl(buildingFeatures.getBedrooms()); 分析 根据经验来讲，这无疑是讲buildingFeatures这个变量是null。于是乎，设断点，重新执行测试，让我意外的是buildingFeatures竟然不是null？WTF？一瞬间，我陷入了陈思、迷茫，多年编程构建起来的世界观，价值观开始慢慢地松动、塌陷。
+时间还在继续，无奈，虽然简单如一个getter方法，还是跟进去一探究竟吧。BuildingFeatures只是一个简单的类，典型的贫血模型，除了几个field，默认构造函数，以及对应的getter和setter，再无其他了。
+public class BuildingFeatures { private Integer bedRooms; public BuildingFeatures() { } public int getBedRooms() { return bedRooms; } public void setBedRooms(Integer bedRooms) { this.bedRooms = bedRooms; } } 狐狸再狡猾，也逃不过猎人的眼睛，终于还是被我发现了问题之所在。问题出在了getter的返回值上。getter返回的是一个int，原始类型，而bedRooms这个field的类型是Integer，在getter内会进行类型的转换，也就是所谓的“拆箱”。要将一个null的Integer值拆箱，抛出一个NullPointerException也就不足为奇了。那getter中具体执行了哪些操作导致这个NullPointerException呢？ 我们还是从编译产生的bytecode中一探究竟吧。
+深入分析 javap是一个用来反编译java类文件的小工具，在java的默认安装中有提供。通过如下命令可以看下getter中都执行了哪些操作：
+javap -c out/production/untitled/BuildingFeatures.class 以下是输出：
+public class BuildingFeatures { public BuildingFeatures(); Code: 0: aload_0 1: invokespecial #1 // Method java/lang/Object.&amp;quot;&amp;lt;init&amp;gt;&amp;quot;:()V 4: return public int getBedRooms(); Code: 0: aload_0 1: getfield #2 // Field bedRooms:Ljava/lang/Integer; 4: invokevirtual #3 // Method java/lang/Integer.</description>
+    </item>
+    
+  </channel>
+</rss>

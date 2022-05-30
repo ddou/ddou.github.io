@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Architecture on 子不语</title>
+    <link>https://ddou.github.io/tags/architecture/</link>
+    <description>Recent content in Architecture on 子不语</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 21 Apr 2020 22:50:34 +0800</lastBuildDate><atom:link href="https://ddou.github.io/tags/architecture/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>闲谈软件系统中的复杂度</title>
+      <link>https://ddou.github.io/posts/on-software-module/</link>
+      <pubDate>Tue, 21 Apr 2020 22:50:34 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/on-software-module/</guid>
+      <description>现在的软件项目大多越来越复杂，随着上线时间日久，业务持续变更，开发人员一波一波的轮换，产品到后期时，改动日渐困难，上线时间遥遥无期。类似的系统之所以复杂， 其中部分原因是由于业务本身的复杂性，另外一部分的复杂度则是来自于开发阶段，也就是说由开发阶段不合理的设计和实现引入的。 不合理的设计和实现导致系统僵硬和脆弱，难以修改，难以重用，容易出错。模块化是应对复杂系统的一种常用办法。
+模块化 分而治之是我们在面临复杂问题时常用的应对手法。按照MECE的原则，我们把复杂问题分解为一个个更简单的小问题，然后各个击破。微服务设计中的做法是把整个问题域划分为多个子域，每个子域对应一个受限上下文(bounded context), 进而每个受限上下文可以对应到一个微服务。每个微服务有各自的职责，包含该问题子域内的业务逻辑。多个微服务之间协作共同为上层提供业务能力。
+在单个组件内部，代码被组织到不同的模块内。模块级别的实现上，则是把模块职责做更细的划分，对应到不同的类实现不同的职责。
+模块之间通过提供的接口彼此交互。模块可以以不同的形式对外提供接口：
+ API 外部可访问的数据结构 外部可访问的函数 共享文件或内存  模块之间的耦合的方式也会因不同的接口方式而有所不同。模块化带来最大的好处是通过接口来提供其功能，而隐藏了功能的实现细节。模块的使用者仅仅关心接口的使用，而不必关注于功能的实现方式。基于模块化的系统设计，能带来显而易见的好处：
+高层次快速理解系统结构
+通过梳理系统模块结构，理清各个模块的职责，对外提供的接口，我们可以快速从高层次快速理解系统的结构。C4 模型是经常用来可视化系统架构一个工具。其中的组件图(Component Diagram)就展示了系统模块结构：
+细节层面的功能开发
+当深入代码细节时，开发人员这更多关注于当前模块，而不必关心所依赖模块的细节。这样就避免了将太多逻辑装载进脑中，降低认知复杂度。
+有了模块和接口，模块间互相配合也完成了功能，然后呢？
+简单接口 Java 开发人员对 Java 中文件读取的操作应该都有很深刻的印象：
+FileInputStream fileStream = new FileInputStream(fileName); BufferedInputStream bufferedStream = new BufferedInputStream(fileStream); ObjectInputStream objectStream = new ObjectInputStream(bufferedStream); 当我们想读取一个包含序列化对象的文件时，必须要手动构建一个FileInputStream, BufferedInputStream， 然后才是ObjectInputStream。虽然这样的设计提供了足够的灵活度，但对用户而言，这是非常的不友好。
+在《软件设计的哲学》中，John Ousterhout 提出 Deep Module 的概念：
+ “The best modules are deep: they allow a lot of functionality to be accessed through a simple interface.</description>
+    </item>
+    
+    <item>
+      <title>[译文]再谈CAP理论</title>
+      <link>https://ddou.github.io/posts/cap-theorem-revisited-translation/</link>
+      <pubDate>Tue, 09 May 2017 23:58:10 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/cap-theorem-revisited-translation/</guid>
+      <description>最近在看分布式相关文章时，偶遇该篇文章，文章虽简短，但分析透彻, 故译来与大家分享，希望能读者有帮助。
+译文如下
+当今技术领域，我们经常碰到这样一种情况：希望通过增加额外的资源，如（计算能力，存储等）来横向扩展系统，以期能成功在合理的时间内完成请求处理。这是通过给系统添加商用硬件（commodity hardware）来应对不断增加的负载。该扩展策略导致的一个问题就是系统复杂度升高。该场景下 CAP 理论就要起作用了。
+CAP 理论陈述如下： 在一个分布式系统中(一个由多个共享数据又互相连接的计算机节点组成的系统)，对于一次数据读/写操作对，只能得到如下三个保证中的两个： 一致性，可用性，分区容错性， 其中之一必然被牺牲。
+ The CAP Theorem states that, in a distributed system (a collection of interconnected nodes that share data.), you can only have two out of the following three guarantees across a write/read pair: Consistency, Availability, and Partition Tolerance - one of them must be sacrificed.
+ 如下图所示，我们并没有太多选择：
+ 一致性  对于一个给定的客户端，一次读操作总是确保返回最近一次写操作。
+ 可用性  一个正常工作的节点总是在合理的时间范围内返回合理的响应。
+ 分区容错性  当出现网络分区时，系统也可以继续工作。</description>
+    </item>
+    
+  </channel>
+</rss>

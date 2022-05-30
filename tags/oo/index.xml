@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>OO on 子不语</title>
+    <link>https://ddou.github.io/tags/oo/</link>
+    <description>Recent content in OO on 子不语</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 21 Apr 2020 22:50:34 +0800</lastBuildDate><atom:link href="https://ddou.github.io/tags/oo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>闲谈软件系统中的复杂度</title>
+      <link>https://ddou.github.io/posts/on-software-module/</link>
+      <pubDate>Tue, 21 Apr 2020 22:50:34 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/on-software-module/</guid>
+      <description>现在的软件项目大多越来越复杂，随着上线时间日久，业务持续变更，开发人员一波一波的轮换，产品到后期时，改动日渐困难，上线时间遥遥无期。类似的系统之所以复杂， 其中部分原因是由于业务本身的复杂性，另外一部分的复杂度则是来自于开发阶段，也就是说由开发阶段不合理的设计和实现引入的。 不合理的设计和实现导致系统僵硬和脆弱，难以修改，难以重用，容易出错。模块化是应对复杂系统的一种常用办法。
+模块化 分而治之是我们在面临复杂问题时常用的应对手法。按照MECE的原则，我们把复杂问题分解为一个个更简单的小问题，然后各个击破。微服务设计中的做法是把整个问题域划分为多个子域，每个子域对应一个受限上下文(bounded context), 进而每个受限上下文可以对应到一个微服务。每个微服务有各自的职责，包含该问题子域内的业务逻辑。多个微服务之间协作共同为上层提供业务能力。
+在单个组件内部，代码被组织到不同的模块内。模块级别的实现上，则是把模块职责做更细的划分，对应到不同的类实现不同的职责。
+模块之间通过提供的接口彼此交互。模块可以以不同的形式对外提供接口：
+ API 外部可访问的数据结构 外部可访问的函数 共享文件或内存  模块之间的耦合的方式也会因不同的接口方式而有所不同。模块化带来最大的好处是通过接口来提供其功能，而隐藏了功能的实现细节。模块的使用者仅仅关心接口的使用，而不必关注于功能的实现方式。基于模块化的系统设计，能带来显而易见的好处：
+高层次快速理解系统结构
+通过梳理系统模块结构，理清各个模块的职责，对外提供的接口，我们可以快速从高层次快速理解系统的结构。C4 模型是经常用来可视化系统架构一个工具。其中的组件图(Component Diagram)就展示了系统模块结构：
+细节层面的功能开发
+当深入代码细节时，开发人员这更多关注于当前模块，而不必关心所依赖模块的细节。这样就避免了将太多逻辑装载进脑中，降低认知复杂度。
+有了模块和接口，模块间互相配合也完成了功能，然后呢？
+简单接口 Java 开发人员对 Java 中文件读取的操作应该都有很深刻的印象：
+FileInputStream fileStream = new FileInputStream(fileName); BufferedInputStream bufferedStream = new BufferedInputStream(fileStream); ObjectInputStream objectStream = new ObjectInputStream(bufferedStream); 当我们想读取一个包含序列化对象的文件时，必须要手动构建一个FileInputStream, BufferedInputStream， 然后才是ObjectInputStream。虽然这样的设计提供了足够的灵活度，但对用户而言，这是非常的不友好。
+在《软件设计的哲学》中，John Ousterhout 提出 Deep Module 的概念：
+ “The best modules are deep: they allow a lot of functionality to be accessed through a simple interface.</description>
+    </item>
+    
+  </channel>
+</rss>

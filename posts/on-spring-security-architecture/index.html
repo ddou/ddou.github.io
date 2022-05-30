@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<title>简析Spring Security | 子不语</title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.90.1" />
+<meta name="description" content="简要介绍 Spring Security 实现机制">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://ddou.github.io/css/minimal.css">
+<link rel="canonical" href="https://ddou.github.io/posts/on-spring-security-architecture/">
+<link rel="alternate" type="application/rss+xml" href="" title="子不语">
+
+<header>
+  
+    <a href="https://ddou.github.io/" class="title">子不语</a>
+  
+  
+    <nav>
+    
+      <a href="https://ddou.github.io/">文章</a>
+    
+      <a href="https://ddou.github.io/tags/">标签</a>
+    
+      <a href="https://ddou.github.io/about/">关于</a>
+    
+      <a href="https://ddou.github.io/index.xml">订阅</a>
+    
+    </nav>
+  
+</header>
+
+<article>
+  <header>
+    <h1>简析Spring Security</h1>
+    <time
+      datetime="2022-05-13T16:42:02&#43;08:00">May 13, 2022</time>
+      
+
+<small><code><a href="https://ddou.github.io/tags/java">Java</a></code></small>
+
+
+<small><code><a href="https://ddou.github.io/tags/spring">Spring</a></code></small>
+
+
+<small><code><a href="https://ddou.github.io/tags/spring-security">Spring Security</a></code></small>
+
+  </header>
+  <p>Spring Security 提供了灵活简便的方式进行服务安全相关的配置。如下，只需要简单几行代码即可完成一个基于 JWT Token 的 API 服务的认证设置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Configuration</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SecurityConfiguration</span> <span style="color:#66d9ef">extends</span> WebSecurityConfigurerAdapter <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">configure</span><span style="color:#f92672">(</span>HttpSecurity http<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
+        http<span style="color:#f92672">.</span><span style="color:#a6e22e">authorizeRequests</span><span style="color:#f92672">()</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">antMatchers</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/api/login&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">permitAll</span><span style="color:#f92672">()</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">anyRequest</span><span style="color:#f92672">().</span><span style="color:#a6e22e">authenticated</span><span style="color:#f92672">()</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">and</span><span style="color:#f92672">()</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">addFilterAt</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> JWTAuthFilter<span style="color:#f92672">(),</span> BasicAuthenticationFilter<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+</code></pre></div><p>​ 上述配置允许/api/login 匿名访问，其他所有 endpoint 都必须通过身份认证后使用。身份认证基于 JWT Token 实现， JWTAuthFilter 负责验证请求头中是否包含有效的身份认证信息。</p>
+<p>​ 那么 Spring Security 提供灵活强大的配置方式背后，具体是怎么工作的呢？ 上述寥寥几行代码背后隐藏着哪些魔法呢？下面首先我们从 Spring Securtiy 的工作机制聊起。</p>
+<h2 id="spring-security-工作机制">Spring Security 工作机制</h2>
+<p>​ Spring Security 对 Servlet 的安全实现时基于 Servlet <code>Filter</code> 实现的。首先，我们来看下一个典型的请求处理流程：</p>
+<p><img src="https://ddou.github.io/image/filterchain.png" alt="filterchain"></p>
+<p>SpringMVC 应用在在处理 Web 请求时，会创建一个<code>FilterChain</code>，包含了一些列的 Filter 和与该请求 URI 匹配的 Servlet （<code>DispatcherServlet</code>）。 Spring Security 通过在处理请求的 <code>FilterChain</code> 中插入 security 相关的 <code>Filter</code> 来实现其功能：</p>
+<ol>
+<li>Spring 提供的一个 Filter 实现 <code>DelegatingFilterProxy</code>，可以作为一个标准的 Filter 在 Servelt 容器生命周期内注册，并将具体工作细节委托给实现了 Filter 接口的 Spring bean。</li>
+<li><code>DeletagtingFilterProxy</code> 将具体工作委托给 <code>FilterChainProxy</code>。 <code>FilterChainProxy</code> 是 Spring Security 提供的一个 Filter 实现，封装了用户定义的 Security 规则。</li>
+<li><code>FilterChainProxy</code> 内包含了多个 <code>SecurityFilterChain</code> 实例。每个 <code>SecurityFilterChain</code> 会匹配对应的请求。每个请求只会第一个匹配的 <code>SecurityFilterChain</code> 处理。</li>
+<li>每个 <code>SecurityFilterChain</code> 内包含多个 Filter。Filter 中包含了具体的认证和授权相关逻辑。</li>
+</ol>
+<p><img src="https://ddou.github.io/image/multi-securityfilterchain.png" alt="multi securityfilterchain"></p>
+<p>针对本文开头的 API 的安全配置，实际的结构如下。</p>
+<p><img src="https://ddou.github.io/image/sample-filter-chain.png" alt="sample-filter-chain"></p>
+<p>Spring Security 生成了一个 <code>SecurityFilterChain</code>。该 <code>SecurityFilterChain</code> 内包含了 多个 Filter。其中 <code>FilterSecurityInterceptor</code>是基于下述 2 行 代码生成。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">http<span style="color:#f92672">.</span><span style="color:#a6e22e">authorizeRequests</span><span style="color:#f92672">()</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">antMatchers</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/api/login&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">permitAll</span><span style="color:#f92672">()</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">anyRequest</span><span style="color:#f92672">().</span><span style="color:#a6e22e">authenticated</span><span style="color:#f92672">()</span>
+</code></pre></div><p>其中的 JWTAuthFilter 则是通过创建 JWTAuthFilter 实例配置的。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  <span style="color:#f92672">.</span><span style="color:#a6e22e">and</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">addFilterAt</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> JWTAuthFilter<span style="color:#f92672">(),</span> BasicAuthenticationFilter<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</code></pre></div><p>为了支撑 Spring Security 灵活且强大的配置方式，其 <code>SecurityFilterChain</code> 的构建过程也颇有意思。下一篇介绍下 <code>SecurityFilterChain</code>的构建过程。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://docs.spring.io/spring-security/site/docs/5.4.6/reference/html5/#servlet-architecture">Spring Security Reference</a></li>
+</ul>
+
+</article>
+
+<script src="https://utteranc.es/client.js"
+        repo="ddou/ddou.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+<style>
+    div.utterances {
+        max-width: 80%;
+        width: 60%;
+    }
+</style>
+
+<script>
+    (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-40664887-1' , { 'siteSpeedSampleRate': 100 });
+    ga('send', 'pageview');
+    ga('set', 'anonymizeIp', true);
+</script>
+
+
+
+</html>

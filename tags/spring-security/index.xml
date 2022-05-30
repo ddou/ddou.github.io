@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spring Security on 子不语</title>
+    <link>https://ddou.github.io/tags/spring-security/</link>
+    <description>Recent content in Spring Security on 子不语</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 13 May 2022 16:42:02 +0800</lastBuildDate><atom:link href="https://ddou.github.io/tags/spring-security/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>简析Spring Security</title>
+      <link>https://ddou.github.io/posts/on-spring-security-architecture/</link>
+      <pubDate>Fri, 13 May 2022 16:42:02 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/on-spring-security-architecture/</guid>
+      <description>Spring Security 提供了灵活简便的方式进行服务安全相关的配置。如下，只需要简单几行代码即可完成一个基于 JWT Token 的 API 服务的认证设置：
+@Configuration public class SecurityConfiguration extends WebSecurityConfigurerAdapter { @Override protected void configure(HttpSecurity http) throws Exception { http.authorizeRequests() .antMatchers(&amp;#34;/api/login&amp;#34;).permitAll() .anyRequest().authenticated() .and() .addFilterAt(new JWTAuthFilter(), BasicAuthenticationFilter.class); } } ​ 上述配置允许/api/login 匿名访问，其他所有 endpoint 都必须通过身份认证后使用。身份认证基于 JWT Token 实现， JWTAuthFilter 负责验证请求头中是否包含有效的身份认证信息。
+​ 那么 Spring Security 提供灵活强大的配置方式背后，具体是怎么工作的呢？ 上述寥寥几行代码背后隐藏着哪些魔法呢？下面首先我们从 Spring Securtiy 的工作机制聊起。
+Spring Security 工作机制 ​ Spring Security 对 Servlet 的安全实现时基于 Servlet Filter 实现的。首先，我们来看下一个典型的请求处理流程：
+SpringMVC 应用在在处理 Web 请求时，会创建一个FilterChain，包含了一些列的 Filter 和与该请求 URI 匹配的 Servlet （DispatcherServlet）。 Spring Security 通过在处理请求的 FilterChain 中插入 security 相关的 Filter 来实现其功能：</description>
+    </item>
+    
+  </channel>
+</rss>

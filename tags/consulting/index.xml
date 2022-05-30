@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Consulting on 子不语</title>
+    <link>https://ddou.github.io/tags/consulting/</link>
+    <description>Recent content in Consulting on 子不语</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 23 Jul 2019 15:34:30 +0800</lastBuildDate><atom:link href="https://ddou.github.io/tags/consulting/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>你的代码不干净</title>
+      <link>https://ddou.github.io/posts/clean-code-discussion/</link>
+      <pubDate>Tue, 23 Jul 2019 15:34:30 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/posts/clean-code-discussion/</guid>
+      <description>“你这个代码写的不clean呀， 你看这里的order是个double类型的， 为什么不用整型的呢？”。在一次讨论中，对方给出这么个结论。
+关于设计的讨论基本是程序员的日常。在讨论中，各种“大帽子”会飞过来,飞过去， Clean、SOLID、扩展性、可测试性、复杂度等等。如果对“帽子”本身的内涵不理解，被扣帽子的人就么办法做出合理的为自己的代码辩护。扣帽子的人则是在调皮捣蛋。 比如上面的场景，clean是指什么？当对方说代码不clean的时候，他又在指什么？
+按照需求，页面上需要显示出一系列表单控件，order则标记着各个控件的显示顺序。实际实现中，每个控件实例有个order属性，按照order排序后，逐个显示即满足需求。上面的实现是能完全满足Kent Beck在简单设计(Simple design)中提高的4个要求的:
+ 测试通过 明确表达代码意图 没有重复 最小化实现，没有冗余  额外的好处，就是简单，易理解， 维护也方便。当有更多的组件需要插入到现有列表中时，也总是可以找到一个位置。另外，即使如对方所言换成整型，也没有本质的区别。
+按照我们对整洁代码的理解，这个实现是满足要求的。但对方指的不clean, 具体是什么呢？是不满足需求？还是有其他隐情？真相是作为非技术人员，对方只是纯粹觉得整数比带小数点的浮点数更“干净”！
+这就是典型的讨论双方对clean没有共识，也就是所谓的鸡同鸭讲。这时，就需要理解内涵的一方开始耐心的科普：首先我们定义一下什么是X, 然后再讨论为什么Y不X。
+好的程序员，不仅要有一双巧手写出优雅的代码，还要缜密理论知识织就的铁布衫，随时抵御飞来的大帽子。</description>
+    </item>
+    
+  </channel>
+</rss>

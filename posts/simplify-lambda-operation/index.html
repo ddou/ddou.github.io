@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<title>从丑到美： 简化 Lambda 操作 | 子不语</title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.90.1" />
+<meta name="description" content="Some description">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://ddou.github.io/css/minimal.css">
+<link rel="canonical" href="https://ddou.github.io/posts/simplify-lambda-operation/">
+<link rel="alternate" type="application/rss+xml" href="" title="子不语">
+
+<header>
+  
+    <a href="https://ddou.github.io/" class="title">子不语</a>
+  
+  
+    <nav>
+    
+      <a href="https://ddou.github.io/">文章</a>
+    
+      <a href="https://ddou.github.io/tags/">标签</a>
+    
+      <a href="https://ddou.github.io/about/">关于</a>
+    
+      <a href="https://ddou.github.io/index.xml">订阅</a>
+    
+    </nav>
+  
+</header>
+
+<article>
+  <header>
+    <h1>从丑到美： 简化 Lambda 操作</h1>
+    <time
+      datetime="2022-05-28T18:01:31&#43;08:00">May 28, 2022</time>
+      
+
+<small><code><a href="https://ddou.github.io/tags/%E9%87%8D%E6%9E%84">重构</a></code></small>
+
+
+<small><code><a href="https://ddou.github.io/tags/%E4%BB%A3%E7%A0%81%E5%8C%A0%E8%89%BA">代码匠艺</a></code></small>
+
+
+<small><code><a href="https://ddou.github.io/tags/java">java</a></code></small>
+
+  </header>
+  <p>作为软件工程师， 工作的大部分时间我都在写代码，或者阅读别人的代码。期间，看到过许多优雅的代码，也见过糟糕的实现。 这个代码匠艺系列会分享一些优雅的实现，以及代码重构的经历。</p>
+<p>本篇为该系列的第一篇。</p>
+<p>Java 8 为集合类操作引入了 Stream。 可以创建 Stream 或者将集合类转化为 Stream 实例，通过传入 Lambda 表达式实现一系列的过滤、转化操作。理想情况下，Stream 和 Lambda 相结合可以写出清晰易懂的代码。但现实情况并非总是如此。比如下面这段代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> String <span style="color:#a6e22e">renderPipelineScript</span><span style="color:#f92672">(</span>JenkinsPipeline pipeline<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        PipelineScript pipelineScript <span style="color:#f92672">=</span> pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">renderScript</span><span style="color:#f92672">();</span>
+        pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">setExecutionRule</span><span style="color:#f92672">(</span>nonNull<span style="color:#f92672">(</span>pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">getExecutionRule</span><span style="color:#f92672">())</span> <span style="color:#f92672">?</span> pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">getExecutionRule</span><span style="color:#f92672">()</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;STOP&#34;</span><span style="color:#f92672">);</span>
+        ofNullable<span style="color:#f92672">(</span>pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">getStages</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">ifPresent</span><span style="color:#f92672">(</span>stages <span style="color:#f92672">-&gt;</span> stages<span style="color:#f92672">.</span><span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span>stage <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+            stage<span style="color:#f92672">.</span><span style="color:#a6e22e">setQualityGateType</span><span style="color:#f92672">(</span>isNull<span style="color:#f92672">(</span>stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateType</span><span style="color:#f92672">())</span> <span style="color:#f92672">?</span> LanguageType<span style="color:#f92672">.</span><span style="color:#a6e22e">Maven</span> <span style="color:#f92672">:</span> stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateType</span><span style="color:#f92672">());</span>
+            stage<span style="color:#f92672">.</span><span style="color:#a6e22e">setQualityGateContainer</span><span style="color:#f92672">(</span>isNull<span style="color:#f92672">(</span>stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateContainer</span><span style="color:#f92672">())</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;maven:3.8.4-jdk-11&#34;</span> <span style="color:#f92672">:</span> stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateContainer</span><span style="color:#f92672">());</span>
+            ofNullable<span style="color:#f92672">(</span>stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getSteps</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">ifPresent</span><span style="color:#f92672">(</span>steps <span style="color:#f92672">-&gt;</span> steps<span style="color:#f92672">.</span><span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">::</span>renderStepScript<span style="color:#f92672">));</span>
+        <span style="color:#f92672">}));</span>
+        <span style="color:#66d9ef">return</span> ciScriptTemplateHelper<span style="color:#f92672">.</span><span style="color:#a6e22e">renderPipelineScriptByTemplate</span><span style="color:#f92672">(</span>pipelineScript<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;pipeline-script.ftl&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>不难看出，这段代码是在一个持续集成流水线的限界上下文内，有一个 Pipeline 的模型大致如下。这段代码在将 Pipe 模型定义的流水线转化为 Jenkins 的流水线配置文件。</p>
+<p><img src="https://ddou.github.io/image/pipeline-refactoring.png" alt="pipeline-refactoring"></p>
+<p>代码逻辑并不复杂，但阅读起来多少还是有些障碍，不够顺畅：</p>
+<ol>
+<li>嵌套的 <code>Optional</code>，<code>isPresent</code>, <code>forEach</code> 操作</li>
+<li><code>stage</code>的<code>forEach</code>内 lambda 操作略显复杂，不太能清晰。</li>
+</ol>
+<p>下面就对上述代码做简单重构，以简化其阅读障碍，使之更清晰易懂。</p>
+<ol>
+<li>避免不必要的空检查
+从上下文代码得知<code>pipeline.renderScript()</code>执行中要么直接抛出异常，要么正常返回，所以该方法内可以不考虑<code>pipelineScript</code>为空的场景，null 检查的部分可以删掉。另外，对于<code>pipelinescript.getStage()</code>和<code>stage.getSteps()</code>这两个方法，可以修改其行为在空时返回空列表，而不是<code>Null</code>。如此，我们可以将代码简化到如下：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> String <span style="color:#a6e22e">renderPipelineScript2</span><span style="color:#f92672">(</span>JenkinsPipeline pipeline<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    PipelineScript pipelineScript <span style="color:#f92672">=</span> pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">renderScript</span><span style="color:#f92672">();</span>
+    pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">setExecutionRule</span><span style="color:#f92672">(</span>nonNull<span style="color:#f92672">(</span>pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">getExecutionRule</span><span style="color:#f92672">())</span> <span style="color:#f92672">?</span> pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">getExecutionRule</span><span style="color:#f92672">()</span> <span style="color:#f92672">:</span> ExecutionRule<span style="color:#f92672">.</span><span style="color:#a6e22e">STOP</span><span style="color:#f92672">);</span>
+    pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">getStages</span><span style="color:#f92672">().</span><span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span>stage <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+        stage<span style="color:#f92672">.</span><span style="color:#a6e22e">setQualityGateType</span><span style="color:#f92672">(</span>isNull<span style="color:#f92672">(</span>stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateType</span><span style="color:#f92672">())</span> <span style="color:#f92672">?</span> Maven <span style="color:#f92672">:</span> stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateType</span><span style="color:#f92672">());</span>
+        stage<span style="color:#f92672">.</span><span style="color:#a6e22e">setQualityGateContainer</span><span style="color:#f92672">(</span>isNull<span style="color:#f92672">(</span>stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateContainer</span><span style="color:#f92672">())</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;maven:3.8.4-jdk-11&#34;</span> <span style="color:#f92672">:</span> stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateContainer</span><span style="color:#f92672">());</span>
+        stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getSteps</span><span style="color:#f92672">().</span><span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span>step <span style="color:#f92672">-&gt;</span> renderStepScript<span style="color:#f92672">(</span>step<span style="color:#f92672">,</span> stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">()));</span>
+    <span style="color:#f92672">});</span>
+    <span style="color:#66d9ef">return</span> ciScriptTemplateHelper<span style="color:#f92672">.</span><span style="color:#a6e22e">renderPipelineScriptByTemplate</span><span style="color:#f92672">(</span>pipelineScript<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;pipeline-script.ftl&#34;</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="2">
+<li>简化 Optional 替换默认值职责逻辑
+上述代码中，通过使用判空以及三元运算符设置默认值，可以修改为使用<code>Optional.orElse</code>来实现，这种声明式的写法更直观，也避免判断反转的错误。调整后代码如下：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> String <span style="color:#a6e22e">renderPipelineScript2</span><span style="color:#f92672">(</span>JenkinsPipeline pipeline<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    PipelineScript pipelineScript <span style="color:#f92672">=</span> pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">renderScript</span><span style="color:#f92672">();</span>
+    pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">setExecutionRule</span><span style="color:#f92672">(</span>ofNullable<span style="color:#f92672">(</span>pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">getExecutionRule</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>ExecutionRule<span style="color:#f92672">.</span><span style="color:#a6e22e">STOP</span><span style="color:#f92672">));</span>
+    pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">getStages</span><span style="color:#f92672">().</span><span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span>stage <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+        stage<span style="color:#f92672">.</span><span style="color:#a6e22e">setQualityGateType</span><span style="color:#f92672">(</span>ofNullable<span style="color:#f92672">(</span>stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateType</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>Maven<span style="color:#f92672">));</span>
+        stage<span style="color:#f92672">.</span><span style="color:#a6e22e">setQualityGateContainer</span><span style="color:#f92672">(</span>ofNullable<span style="color:#f92672">(</span>stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateContainer</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;maven:3.8.4-jdk-11&#34;</span><span style="color:#f92672">));</span>
+        stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getSteps</span><span style="color:#f92672">().</span><span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span>step <span style="color:#f92672">-&gt;</span> renderStepScript<span style="color:#f92672">(</span>step<span style="color:#f92672">,</span> stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">()));</span>
+    <span style="color:#f92672">});</span>
+    <span style="color:#66d9ef">return</span> ciScriptTemplateHelper<span style="color:#f92672">.</span><span style="color:#a6e22e">renderPipelineScriptByTemplate</span><span style="color:#f92672">(</span>pipelineScript<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;pipeline-script.ftl&#34;</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="3">
+<li>简化 Lambda 表达式
+虽然 Java 引入 Lambda 后可以将一个代码片段作为 lambda 传入，但从可读性的角度考虑，建议 Lambda 的行数不要超过一行。2 行以及以上的 Lambda 表达可以提取为一个方法、或者定义为局部变量。并且给方法和局部变量合理的命名。</li>
+</ol>
+<p>上例中 Lambda 虽然只有三行，但却包含了 2 个职责 1. 给 <code>stage</code> 的<code>qualityGate</code>设置默认值 2. 渲染<code>stage</code>内的每个<code>step</code></p>
+<p>首先，我们把职责 1 相关逻辑提取为独立方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ensureQualityGateDefaults</span><span style="color:#f92672">(</span>Stage stage<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    stage<span style="color:#f92672">.</span><span style="color:#a6e22e">setQualityGateType</span><span style="color:#f92672">(</span>ofNullable<span style="color:#f92672">(</span>stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateType</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>Maven<span style="color:#f92672">));</span>
+    stage<span style="color:#f92672">.</span><span style="color:#a6e22e">setQualityGateContainer</span><span style="color:#f92672">(</span>ofNullable<span style="color:#f92672">(</span>stage<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualityGateContainer</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;maven:3.8.4-jdk-11&#34;</span><span style="color:#f92672">));</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>​ 然后，把 Lambda 内的两个职责拆分开来，并且使用方法引用来调用<code>renderStepScript</code>代码调整后如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> String <span style="color:#a6e22e">renderPipelineScript</span><span style="color:#f92672">(</span>JenkinsPipeline pipeline<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    PipelineScript pipelineScript <span style="color:#f92672">=</span> pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">renderScript</span><span style="color:#f92672">();</span>
+    pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">setExecutionRule</span><span style="color:#f92672">(</span>ofNullable<span style="color:#f92672">(</span>pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">getExecutionRule</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>ExecutionRule<span style="color:#f92672">.</span><span style="color:#a6e22e">STOP</span><span style="color:#f92672">));</span>
+    pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">getStages</span><span style="color:#f92672">().</span><span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">::</span>ensureQualityGateDefaults<span style="color:#f92672">);</span>
+    pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">getStages</span><span style="color:#f92672">().</span><span style="color:#a6e22e">stream</span><span style="color:#f92672">().</span><span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>Stage<span style="color:#f92672">::</span>getSteps<span style="color:#f92672">).</span><span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">::</span>renderStepScript<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> ciScriptTemplateHelper<span style="color:#f92672">.</span><span style="color:#a6e22e">renderPipelineScriptByTemplate</span><span style="color:#f92672">(</span>pipelineScript<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;pipeline-script.ftl&#34;</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="4">
+<li>设置 QualityGate 项目默认值职责移至模型
+<code>renderPipelineScript</code>以及其所在的类职责在于将模型定义的流水线渲染为 Jenkin 流水线定义。代码中 QualityGate 相关默认值设置的职责不应该跟渲染相关逻辑耦合在一起。所以上一步中我们提取的<code>ensureQualityGateDefaults</code>应该定义在<code>Stage</code>类中。我们可以使用移动方法重构手法，将其移到合理的位置。最终代码如下：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> String <span style="color:#a6e22e">renderPipelineScript</span><span style="color:#f92672">(</span>JenkinsPipeline pipeline<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    PipelineScript pipelineScript <span style="color:#f92672">=</span> pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">renderScript</span><span style="color:#f92672">();</span>
+    pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">setExecutionRule</span><span style="color:#f92672">(</span>ofNullable<span style="color:#f92672">(</span>pipeline<span style="color:#f92672">.</span><span style="color:#a6e22e">getExecutionRule</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>ExecutionRule<span style="color:#f92672">.</span><span style="color:#a6e22e">STOP</span><span style="color:#f92672">));</span>
+    pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">getStages</span><span style="color:#f92672">().</span><span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span>Stage<span style="color:#f92672">::</span>ensureQualityGateDefaults<span style="color:#f92672">);</span>
+    pipelineScript<span style="color:#f92672">.</span><span style="color:#a6e22e">getStages</span><span style="color:#f92672">().</span><span style="color:#a6e22e">stream</span><span style="color:#f92672">().</span><span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>Stage<span style="color:#f92672">::</span>getSteps<span style="color:#f92672">).</span><span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">::</span>renderStepScript<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> ciScriptTemplateHelper<span style="color:#f92672">.</span><span style="color:#a6e22e">renderPipelineScriptByTemplate</span><span style="color:#f92672">(</span>pipelineScript<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;pipeline-script.ftl&#34;</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>经过以上步骤，最终代码变的更容易阅读了。我们能更清晰的看到在 <code>render</code> 前的准备数据阶段，完成了 3 件事情：</p>
+<ul>
+<li>设置<code>executionRule</code>默认值</li>
+<li>设置每个<code>stage</code>的<code>QualityGate</code> 默认值</li>
+<li>渲染每个<code>step</code></li>
+</ul>
+<p>阅读时，也不用假装自己是人肉编译器，需要在脑子里模拟执行才能知道完成了什么操作。</p>
+<p>本次重构中值得分享的几点小技巧：</p>
+<ol>
+<li>方法的返回值避免返回<code>null</code>。如果返回值为集合类型，可以返回空集合；如果是单个值，可以返回<code>Optional</code>。</li>
+<li>作为参数的 Lambda 如果超过 2 行，可以考虑提取为方法，或者为之定义局部变量，通过合理的命名表达操作意图。</li>
+<li><code>Optional.orElse</code>这种声明式的写法，在某些场景下替换<code>?:</code>三元运算符可以更直观，而且可以避免判断逻辑反转的错误。</li>
+</ol>
+
+</article>
+
+<script src="https://utteranc.es/client.js"
+        repo="ddou/ddou.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+<style>
+    div.utterances {
+        max-width: 80%;
+        width: 60%;
+    }
+</style>
+
+<script>
+    (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-40664887-1' , { 'siteSpeedSampleRate': 100 });
+    ga('send', 'pageview');
+    ga('set', 'anonymizeIp', true);
+</script>
+
+
+
+</html>
