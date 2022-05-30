@@ -32,7 +32,8 @@ canonifyURLs = true
   faviconSafariPinnedTabColor = "#5bbad5"
   faviconMsApplicationTileColor = "#da532c"
   faviconThemeColor = "#ffffff"
-
+  minimal = true 
+  
 [menu]
   [[menu.nav]]
   name = "文章"
