@@ -3,7 +3,9 @@
 <title>函数式编程初体验 (2) | 子不语</title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.90.1" />
-<meta name="description" content="Some description">
+<meta name="description" content="分享了函数式编程的一些基本概念，使用 Haskell 编写简单函数演示函数式编程基本概念">
+<meta name="keywords" content="Functional Programming, Haskell, 函数式编程">
+<meta name="robots" content="index,follow"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://ddou.github.io/css/minimal.css">
 <link rel="canonical" href="https://ddou.github.io/posts/functional-programming-in-real-world-2/">
@@ -41,27 +43,27 @@
 <small><code><a href="https://ddou.github.io/tags/haskell">Haskell</a></code></small>
 
   </header>
-  <p>在<a href="https://ddou.github.io/posts/functional-programming-in-real-world/">上篇文章</a>中，我们实现的MarsRover已经支持三种基本命令操作了。这次我们来稍微完善下，添加<strong>从字符串解析出命令</strong>的功能。</p>
+  <p>在<a href="https://ddou.github.io/posts/functional-programming-in-real-world/">上篇文章</a>中，我们实现的 MarsRover 已经支持三种基本命令操作了。这次我们来稍微完善下，添加<strong>从字符串解析出命令</strong>的功能。</p>
 <h3 id="分析">分析</h3>
-<p>传入的指令是一个字符串，每个字符对应一个命令。探测器支持的命令只有L，R和M。当遇到不支持的字符时，探测器不作出任何响应。在一般的编程语言中，可能会使用异常来处理无法支持的命令的情况。那么在Haskell中，我们有什么新的武器可以使用吗？ Yes， 那就是<a href="https://wiki.haskell.org/Maybe">Maybe</a> monad.</p>
-<p>Maybe类型代表一种有状态的数据，亦即这个数据存在，也可能不存在。Maybe类型有两个值： Just a&rsquo;和Nothing，分别对应了两种状态。那么在我们的问题中，我们可以让解析函数返回一个Maybe类型，当返回的是Just时，表示返回的是一个支持的命令；当返回Nothing时，表示遇到不支持的命令。</p>
+<p>传入的指令是一个字符串，每个字符对应一个命令。探测器支持的命令只有 L，R 和 M。当遇到不支持的字符时，探测器不作出任何响应。在一般的编程语言中，可能会使用异常来处理无法支持的命令的情况。那么在 Haskell 中，我们有什么新的武器可以使用吗？ Yes， 那就是<a href="https://wiki.haskell.org/Maybe">Maybe</a> monad.</p>
+<p>Maybe 类型代表一种有状态的数据，亦即这个数据存在，也可能不存在。Maybe 类型有两个值： Just a&rsquo;和 Nothing，分别对应了两种状态。那么在我们的问题中，我们可以让解析函数返回一个 Maybe 类型，当返回的是 Just 时，表示返回的是一个支持的命令；当返回 Nothing 时，表示遇到不支持的命令。</p>
 <h3 id="实现">实现</h3>
-<p>基于上面的分析，我们的parse函数可以实现如下：</p>
+<p>基于上面的分析，我们的 parse 函数可以实现如下：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-haskell" data-lang="haskell"><span style="color:#a6e22e">parse</span> <span style="color:#f92672">::</span> <span style="color:#66d9ef">Char</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Maybe</span> <span style="color:#66d9ef">Command</span>
 <span style="color:#a6e22e">parse</span> c <span style="color:#f92672">=</span> <span style="color:#66d9ef">case</span> c <span style="color:#66d9ef">of</span>
     <span style="color:#e6db74">&#39;L&#39;</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Just</span> <span style="color:#66d9ef">L</span>
     <span style="color:#e6db74">&#39;R&#39;</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Just</span> <span style="color:#66d9ef">R</span>
     <span style="color:#e6db74">&#39;M&#39;</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Just</span> <span style="color:#66d9ef">M</span>
     <span style="color:#66d9ef">_</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Nothing</span>
-</code></pre></div><p>parse函数接收一个字符，返回一个Maybe Command。这里又一次使用了模式匹配。当遇到不支持的命令时，返回一个Nothing。</p>
-<p>如此一来，我们的execute的实现也要做对应的改动，以支持Maybe类型的参数。之前的定义如下：</p>
+</code></pre></div><p>parse 函数接收一个字符，返回一个 Maybe Command。这里又一次使用了模式匹配。当遇到不支持的命令时，返回一个 Nothing。</p>
+<p>如此一来，我们的 execute 的实现也要做对应的改动，以支持 Maybe 类型的参数。之前的定义如下：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-haskell" data-lang="haskell"><span style="color:#a6e22e">execute</span> <span style="color:#f92672">::</span> <span style="color:#66d9ef">MarsRover</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">Command</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">MarsRover</span>
 <span style="color:#a6e22e">execute</span> rover command <span style="color:#f92672">=</span>
     <span style="color:#66d9ef">case</span> command <span style="color:#66d9ef">of</span>
         <span style="color:#66d9ef">L</span> <span style="color:#f92672">-&gt;</span> turnLeft rover
         <span style="color:#66d9ef">R</span> <span style="color:#f92672">-&gt;</span> turnRight rover
         <span style="color:#66d9ef">M</span> <span style="color:#f92672">-&gt;</span> move rover
-</code></pre></div><p>为了接收Maybe类型的参数，我们修改为如下:</p>
+</code></pre></div><p>为了接收 Maybe 类型的参数，我们修改为如下:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-haskell" data-lang="haskell"><span style="color:#a6e22e">run</span> <span style="color:#f92672">::</span> <span style="color:#66d9ef">Maybe</span> <span style="color:#66d9ef">Command</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">MarsRover</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">MarsRover</span>
 <span style="color:#a6e22e">run</span> command rover <span style="color:#f92672">=</span>
     <span style="color:#66d9ef">case</span> command <span style="color:#66d9ef">of</span>
@@ -69,7 +71,7 @@
         <span style="color:#66d9ef">Just</span> <span style="color:#66d9ef">R</span> <span style="color:#f92672">-&gt;</span> turnRight rover
         <span style="color:#66d9ef">Just</span> <span style="color:#66d9ef">M</span> <span style="color:#f92672">-&gt;</span> move rover
         <span style="color:#66d9ef">Nothing</span> <span style="color:#f92672">-&gt;</span> rover
-</code></pre></div><p>新的实现中，我们把execute重命名为run，并且修改了参数的顺序和类型。当run遇到Nothing的时候，他什么都不做，只是返回原始的rover实例。</p>
+</code></pre></div><p>新的实现中，我们把 execute 重命名为 run，并且修改了参数的顺序和类型。当 run 遇到 Nothing 的时候，他什么都不做，只是返回原始的 rover 实例。</p>
 <p>验证一下, 正确。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-haskell" data-lang="haskell"><span style="color:#a6e22e">main</span> <span style="color:#f92672">::</span> <span style="color:#66d9ef">IO</span>()
 <span style="color:#a6e22e">main</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">do</span>
@@ -81,26 +83,26 @@
     putStrLn <span style="color:#f92672">$</span> show <span style="color:#f92672">$</span> run cmd <span style="color:#f92672">$</span> <span style="color:#66d9ef">MarsRover</span> (<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">S</span>
     <span style="color:#75715e">-- 输出 MarsRover (0,0) S</span>
 </code></pre></div><h3 id="更近一步">更近一步</h3>
-<p>如果我想支持一系列命令呢？如&quot;LMRWWWMM&quot;？使用Haskell的内置功能，我们可以轻松实现。</p>
-<p>首先我们先定义了一个函数(&gt;)， 其作用于Haskell自带的组合函数(.)类似，只不过是作用的顺序相反。</p>
+<p>如果我想支持一系列命令呢？如&quot;LMRWWWMM&quot;？使用 Haskell 的内置功能，我们可以轻松实现。</p>
+<p>首先我们先定义了一个函数(&gt;)， 其作用于 Haskell 自带的组合函数(.)类似，只不过是作用的顺序相反。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-haskell" data-lang="haskell">(<span style="color:#f92672">&gt;</span>) <span style="color:#f92672">::</span> (a <span style="color:#f92672">-&gt;</span> b) <span style="color:#f92672">-&gt;</span> (b <span style="color:#f92672">-&gt;</span> c) <span style="color:#f92672">-&gt;</span> a <span style="color:#f92672">-&gt;</span> c
 (<span style="color:#f92672">&gt;</span>) f g <span style="color:#f92672">=</span> g<span style="color:#f92672">.</span>f
-</code></pre></div><p>例如：我们有两个函数addOne和plusTwo，那么 addOne.plusTwo的结果是生成一个新的函数，对参数会先乘以2，然后对结果再加1。而addOne&gt;plusTwo则是先对参数加1，然后对结果乘以2。</p>
+</code></pre></div><p>例如：我们有两个函数 addOne 和 plusTwo，那么 addOne.plusTwo 的结果是生成一个新的函数，对参数会先乘以 2，然后对结果再加 1。而 addOne&gt;plusTwo 则是先对参数加 1，然后对结果乘以 2。</p>
 <p>用在我们下面的代码里面，就相当于对探测器执行了如下命令：M &gt; L &gt; M &gt; R &gt; M &gt; L &gt; M &gt; L &gt; M</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-haskell" data-lang="haskell"><span style="color:#a6e22e">main</span> <span style="color:#f92672">::</span> <span style="color:#66d9ef">IO</span>()
 <span style="color:#a6e22e">main</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">do</span>
     <span style="color:#66d9ef">let</span> execute <span style="color:#f92672">=</span> foldl (<span style="color:#f92672">.</span>) id <span style="color:#f92672">$</span> map run <span style="color:#f92672">$</span> map parse <span style="color:#e6db74">&#34;MLMRMLMRM&#34;</span>
     putStrLn <span style="color:#f92672">$</span> show <span style="color:#f92672">$</span> execute <span style="color:#f92672">$</span> <span style="color:#66d9ef">MarsRover</span> (<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">S</span>
     <span style="color:#75715e">-- 输出 MarsRover (2,-3) S</span>
-</code></pre></div><p>execute定义这行需要略作解释。Haskel中($)是一个优先级较低低的右结合运算符，f $ g $ x 的计算与f(g(x))相同，都是从右向左做运算。 这行完成了以下操作：</p>
+</code></pre></div><p>execute 定义这行需要略作解释。Haskel 中($)是一个优先级较低低的右结合运算符，f $ g $ x 的计算与 f(g(x))相同，都是从右向左做运算。 这行完成了以下操作：</p>
 <p><img src="https://github.com/ddou/ddou.github.io/raw/source/static/images/map-flow.png" alt="map-flow"></p>
 <ol>
-<li>把MLMRMLMRM的每个字符解析为Command，第一步map操作的结果是一个Maybe Command类型的List，每个元素代表一个可能的Command。</li>
-<li>对上一步生成的List继续执行map操作，map的结果是每一个Maybe Command被转化一个部分应用的函数（Partial Applied Function)。第二步的结果也是List，只是每个元素都是一个函数，每个函数代表了要在探测器上执行的一个操作。</li>
-<li>对上一步生成的List执行foldl， 将上述List转化为一个函数，通过我们自定义的函数（&gt;）将所有操作组合从为一个函数。</li>
+<li>把 MLMRMLMRM 的每个字符解析为 Command，第一步 map 操作的结果是一个 Maybe Command 类型的 List，每个元素代表一个可能的 Command。</li>
+<li>对上一步生成的 List 继续执行 map 操作，map 的结果是每一个 Maybe Command 被转化一个部分应用的函数（Partial Applied Function)。第二步的结果也是 List，只是每个元素都是一个函数，每个函数代表了要在探测器上执行的一个操作。</li>
+<li>对上一步生成的 List 执行 foldl， 将上述 List 转化为一个函数，通过我们自定义的函数（&gt;）将所有操作组合从为一个函数。</li>
 </ol>
-<p>最终结果为MarsRover (2,-3) S， 读到这里的你可以心算下是否正确？</p>
-<p>这次的功能改进里面，我们使用了Haskell的Maybe monad来处理非法命令的问题，还体会到了函数式编程简洁优美的语法， 代码可以看<a href="https://raw.githubusercontent.com/yutaodou/functional-programming-via-haskell/ab484f1676fbc945bc7e652431f659f533987a3c/examples/mars-rover.hs">这里</a>。</p>
+<p>最终结果为 MarsRover (2,-3) S， 读到这里的你可以心算下是否正确？</p>
+<p>这次的功能改进里面，我们使用了 Haskell 的 Maybe monad 来处理非法命令的问题，还体会到了函数式编程简洁优美的语法， 代码可以看<a href="https://raw.githubusercontent.com/yutaodou/functional-programming-via-haskell/ab484f1676fbc945bc7e652431f659f533987a3c/examples/mars-rover.hs">这里</a>。</p>
 <p>下篇我们继续，问题可以先抛出来：</p>
 <blockquote>
 <p>探测器要保存路径信息，需要将操作过程中所有的坐标信息都最终打印出来，怎么实现？</p>

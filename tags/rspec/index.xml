@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Ruby on 子不语</title>
-    <link>https://ddou.github.io/tags/ruby/</link>
-    <description>Recent content in Ruby on 子不语</description>
+    <title>RSpec on 子不语</title>
+    <link>https://ddou.github.io/tags/rspec/</link>
+    <description>Recent content in RSpec on 子不语</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 08 Mar 2014 22:44:00 +0800</lastBuildDate><atom:link href="https://ddou.github.io/tags/ruby/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 08 Mar 2014 22:44:00 +0800</lastBuildDate><atom:link href="https://ddou.github.io/tags/rspec/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>RSpec优雅验证之Predicate Matcher</title>
       <link>https://ddou.github.io/posts/meaningful-rspec-predicate/</link>

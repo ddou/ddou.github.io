@@ -118,12 +118,12 @@ A Cloud Guru和Linux Academy均有相关视频教程。通过这些视频教程�
       <pubDate>Tue, 23 Jul 2019 15:34:30 +0800</pubDate>
       
       <guid>https://ddou.github.io/posts/clean-code-discussion/</guid>
-      <description>“你这个代码写的不clean呀， 你看这里的order是个double类型的， 为什么不用整型的呢？”。在一次讨论中，对方给出这么个结论。
-关于设计的讨论基本是程序员的日常。在讨论中，各种“大帽子”会飞过来,飞过去， Clean、SOLID、扩展性、可测试性、复杂度等等。如果对“帽子”本身的内涵不理解，被扣帽子的人就么办法做出合理的为自己的代码辩护。扣帽子的人则是在调皮捣蛋。 比如上面的场景，clean是指什么？当对方说代码不clean的时候，他又在指什么？
-按照需求，页面上需要显示出一系列表单控件，order则标记着各个控件的显示顺序。实际实现中，每个控件实例有个order属性，按照order排序后，逐个显示即满足需求。上面的实现是能完全满足Kent Beck在简单设计(Simple design)中提高的4个要求的:
+      <description>“你这个代码写的不 clean 呀， 你看这里的 order 是个 double 类型的， 为什么不用整型的呢？”。在一次讨论中，对方给出这么个结论。
+关于设计的讨论基本是程序员的日常。在讨论中，各种“大帽子”会飞过来,飞过去， Clean、SOLID、扩展性、可测试性、复杂度等等。如果对“帽子”本身的内涵不理解，被扣帽子的人就么办法做出合理的为自己的代码辩护。扣帽子的人则是在调皮捣蛋。 比如上面的场景，clean 是指什么？当对方说代码不 clean 的时候，他又在指什么？
+按照需求，页面上需要显示出一系列表单控件，order 则标记着各个控件的显示顺序。实际实现中，每个控件实例有个 order 属性，按照 order 排序后，逐个显示即满足需求。上面的实现是能完全满足 Kent Beck 在简单设计(Simple design)中提高的 4 个要求的:
  测试通过 明确表达代码意图 没有重复 最小化实现，没有冗余  额外的好处，就是简单，易理解， 维护也方便。当有更多的组件需要插入到现有列表中时，也总是可以找到一个位置。另外，即使如对方所言换成整型，也没有本质的区别。
-按照我们对整洁代码的理解，这个实现是满足要求的。但对方指的不clean, 具体是什么呢？是不满足需求？还是有其他隐情？真相是作为非技术人员，对方只是纯粹觉得整数比带小数点的浮点数更“干净”！
-这就是典型的讨论双方对clean没有共识，也就是所谓的鸡同鸭讲。这时，就需要理解内涵的一方开始耐心的科普：首先我们定义一下什么是X, 然后再讨论为什么Y不X。
+按照我们对整洁代码的理解，这个实现是满足要求的。但对方指的不 clean, 具体是什么呢？是不满足需求？还是有其他隐情？真相是作为非技术人员，对方只是纯粹觉得整数比带小数点的浮点数更“干净”！
+这就是典型的讨论双方对 clean 没有共识，也就是所谓的鸡同鸭讲。这时，就需要理解内涵的一方开始耐心的科普：首先我们定义一下什么是 X, 然后再讨论为什么 Y 不 X。
 好的程序员，不仅要有一双巧手写出优雅的代码，还要缜密理论知识织就的铁布衫，随时抵御飞来的大帽子。</description>
     </item>
     
@@ -181,15 +181,12 @@ CAP 理论陈述如下： 在一个分布式系统中(一个由多个共享数�
       <guid>https://ddou.github.io/posts/functional-programming-in-real-world-3/</guid>
       <description>书接上回。在上篇文章中，我们的火星探测器已经可以解析命令字符串，并且按照命令执行探测任务。新的功能要求我们在这个基础上，增加记录探测器历史位置信息的功能，以保留一份活动位置记录，以避免后期在某个区域重复探测。
 分析 使用我们主流的编程语言，上述功能可以很简单的实现，比如采用如下两个方式：
- 定义一个全局变量，保存历史位置信息，每次移动探测器时，添加最近的位置信息 在MarsRover类中新添一个变量，保存历史位置信息，每次移动都将最近的位置信息添加到变量中  上述两种方式都可以正确的实现功能。但是在我们函数式编程的大背景下，使用是上述任一种方式，都是与函数式编程的理念相违背的： 纯函数的实现是没有副作用的，即不会修改全局状态，也不会修改参数的状态。那有什么办法呢？
+ 定义一个全局变量，保存历史位置信息，每次移动探测器时，添加最近的位置信息 在 MarsRover 类中新添一个变量，保存历史位置信息，每次移动都将最近的位置信息添加到变量中  上述两种方式都可以正确的实现功能。但是在我们函数式编程的大背景下，使用是上述任一种方式，都是与函数式编程的理念相违背的： 纯函数的实现是没有副作用的，即不会修改全局状态，也不会修改参数的状态。那有什么办法呢？
 不论使用何种范式的编程语言，有一些公共的问题都是在程序中需要解决的，例如异常处理，IO，全局状态等需要副作用的场景。只是不同的语言解决问题的方式不同。函数式编程在解决如上述问题时，有自己的思路。Monad就是函数式编程语言用来解决上述问题的利器。
-Monad 从本质上理解Monad，需要范畴论（Category Theory）的知识，这也导致了Monad不太容易理解。简单的讲，Monad是封装了一个计算上下文(Computation Context), 正是因为这一点，monad也被称为“可编程的分号”。
-有一个类型的Monad，大部分人都应该都有过了解。那就是Maybe Monad。Maybe在很多语言里面都有对应的实现。Java 8中对应的实现为java.util.Optional。Optional代表一个可能存在的值，针对两种不同的存在状态，同一个方法调用会有不同的执行逻辑， 例如：
-Optional&amp;lt;Integer&amp;gt; integer = Optional.of(&amp;#34;123&amp;#34;).map(str -&amp;gt; Integer.parseInt(str)); Optional&amp;lt;Integer&amp;gt; empty = Optional.&amp;lt;String&amp;gt;empty().map(str -&amp;gt; Integer.parseInt(str)); 如果我们查看Optional的源码，可以看到map方法的实现，针对了两种不同的存在状态做了不同的处理。这就是Optional所包含的所谓计算上下文，也是Monad的价值所在。
-public&amp;lt;U&amp;gt; Optional&amp;lt;U&amp;gt; map(Function&amp;lt;? super T, ? extends U&amp;gt; mapper) { Objects.requireNonNull(mapper); if (!isPresent()) return empty(); else { return Optional.ofNullable(mapper.apply(value)); } } 类似的，我们也可以通过Monad来实现保存MarsRover的历史位置数据。
-实现 首先，我们先定义Log数据类型。 按照功能要求，我们的Log是一些列的坐标点。
-type Log = [Point] 然后，我们定义一个自己的monad：
-newtype Logger a = Logger (a, Log) deriving (Show) execLogger :: Logger a -&amp;gt; (a, Log) execLogger (Logger (a, log)) = (a, log) record :: MarsRover -&amp;gt; Logger MarsRover record marsRover = Logger (marsRover, [point]) where point = getPosition marsRover 我们定义的monad是一个新的数据类型Logger，包含了MarsRover实例，和它对应的历史位置信息。同时，我们定义了:</description>
+Monad 从本质上理解 Monad，需要范畴论（Category Theory）的知识，这也导致了 Monad 不太容易理解。简单的讲，Monad 是封装了一个计算上下文(Computation Context), 正是因为这一点，monad 也被称为“可编程的分号”。
+有一个类型的 Monad，大部分人都应该都有过了解。那就是Maybe Monad。Maybe 在很多语言里面都有对应的实现。Java 8 中对应的实现为java.util.Optional。Optional 代表一个可能存在的值，针对两种不同的存在状态，同一个方法调用会有不同的执行逻辑， 例如：
+Optional&amp;lt;Integer&amp;gt; integer = Optional.of(&amp;#34;123&amp;#34;).map(str -&amp;gt; Integer.parseInt(str)); Optional&amp;lt;Integer&amp;gt; empty = Optional.&amp;lt;String&amp;gt;empty().map(str -&amp;gt; Integer.parseInt(str)); 如果我们查看 Optional 的源码，可以看到 map 方法的实现，针对了两种不同的存在状态做了不同的处理。这就是 Optional 所包含的所谓计算上下文，也是 Monad 的价值所在。
+public&amp;lt;U&amp;gt; Optional&amp;lt;U&amp;gt; map(Function&amp;lt;? super T, ? extends U&amp;gt; mapper) { Objects.requireNonNull(mapper); if (!isPresent()) return empty(); else { return Optional.ofNullable(mapper.apply(value)); } } 类似的，我们也可以通过 Monad 来实现保存 MarsRover 的历史位置数据。</description>
     </item>
     
     <item>
@@ -198,14 +195,13 @@ newtype Logger a = Logger (a, Log) deriving (Show) execLogger :: Logger a -&amp;
       <pubDate>Sat, 27 Feb 2016 21:58:43 +0800</pubDate>
       
       <guid>https://ddou.github.io/posts/functional-programming-in-real-world-2/</guid>
-      <description>在上篇文章中，我们实现的MarsRover已经支持三种基本命令操作了。这次我们来稍微完善下，添加从字符串解析出命令的功能。
-分析 传入的指令是一个字符串，每个字符对应一个命令。探测器支持的命令只有L，R和M。当遇到不支持的字符时，探测器不作出任何响应。在一般的编程语言中，可能会使用异常来处理无法支持的命令的情况。那么在Haskell中，我们有什么新的武器可以使用吗？ Yes， 那就是Maybe monad.
-Maybe类型代表一种有状态的数据，亦即这个数据存在，也可能不存在。Maybe类型有两个值： Just a&amp;rsquo;和Nothing，分别对应了两种状态。那么在我们的问题中，我们可以让解析函数返回一个Maybe类型，当返回的是Just时，表示返回的是一个支持的命令；当返回Nothing时，表示遇到不支持的命令。
-实现 基于上面的分析，我们的parse函数可以实现如下：
-parse :: Char -&amp;gt; Maybe Command parse c = case c of &amp;#39;L&amp;#39; -&amp;gt; Just L &amp;#39;R&amp;#39; -&amp;gt; Just R &amp;#39;M&amp;#39; -&amp;gt; Just M _ -&amp;gt; Nothing parse函数接收一个字符，返回一个Maybe Command。这里又一次使用了模式匹配。当遇到不支持的命令时，返回一个Nothing。
-如此一来，我们的execute的实现也要做对应的改动，以支持Maybe类型的参数。之前的定义如下：
-execute :: MarsRover -&amp;gt; Command -&amp;gt; MarsRover execute rover command = case command of L -&amp;gt; turnLeft rover R -&amp;gt; turnRight rover M -&amp;gt; move rover 为了接收Maybe类型的参数，我们修改为如下:
-run :: Maybe Command -&amp;gt; MarsRover -&amp;gt; MarsRover run command rover = case command of Just L -&amp;gt; turnLeft rover Just R -&amp;gt; turnRight rover Just M -&amp;gt; move rover Nothing -&amp;gt; rover 新的实现中，我们把execute重命名为run，并且修改了参数的顺序和类型。当run遇到Nothing的时候，他什么都不做，只是返回原始的rover实例。</description>
+      <description>在上篇文章中，我们实现的 MarsRover 已经支持三种基本命令操作了。这次我们来稍微完善下，添加从字符串解析出命令的功能。
+分析 传入的指令是一个字符串，每个字符对应一个命令。探测器支持的命令只有 L，R 和 M。当遇到不支持的字符时，探测器不作出任何响应。在一般的编程语言中，可能会使用异常来处理无法支持的命令的情况。那么在 Haskell 中，我们有什么新的武器可以使用吗？ Yes， 那就是Maybe monad.
+Maybe 类型代表一种有状态的数据，亦即这个数据存在，也可能不存在。Maybe 类型有两个值： Just a&amp;rsquo;和 Nothing，分别对应了两种状态。那么在我们的问题中，我们可以让解析函数返回一个 Maybe 类型，当返回的是 Just 时，表示返回的是一个支持的命令；当返回 Nothing 时，表示遇到不支持的命令。
+实现 基于上面的分析，我们的 parse 函数可以实现如下：
+parse :: Char -&amp;gt; Maybe Command parse c = case c of &amp;#39;L&amp;#39; -&amp;gt; Just L &amp;#39;R&amp;#39; -&amp;gt; Just R &amp;#39;M&amp;#39; -&amp;gt; Just M _ -&amp;gt; Nothing parse 函数接收一个字符，返回一个 Maybe Command。这里又一次使用了模式匹配。当遇到不支持的命令时，返回一个 Nothing。
+如此一来，我们的 execute 的实现也要做对应的改动，以支持 Maybe 类型的参数。之前的定义如下：
+execute :: MarsRover -&amp;gt; Command -&amp;gt; MarsRover execute rover command = case command of L -&amp;gt; turnLeft rover R -&amp;gt; turnRight rover M -&amp;gt; move rover 为了接收 Maybe 类型的参数，我们修改为如下:</description>
     </item>
     
     <item>
@@ -214,8 +210,8 @@ run :: Maybe Command -&amp;gt; MarsRover -&amp;gt; MarsRover run command rover =
       <pubDate>Sat, 27 Feb 2016 21:58:43 +0800</pubDate>
       
       <guid>https://ddou.github.io/posts/functional-programming-in-real-world/</guid>
-      <description>在之前的两篇函数式编程语言特性的文章（上篇和下篇）中简单介绍了一些基本的函数式编程的概念。对函数式编程有了一些基本的概念，那现实中的函数式编程是什么样子的呢？这里就选取一个比较简单的问题，使用Haskell尝试解决一下，以求近距离的感受下函数之美。
-问题 这里采用的是我司一个废弃了很久的面试题目MarsRover，题目内容如下：
+      <description>在之前的两篇函数式编程语言特性的文章（上篇和下篇）中简单介绍了一些基本的函数式编程的概念。对函数式编程有了一些基本的概念，那现实中的函数式编程是什么样子的呢？这里就选取一个比较简单的问题，使用 Haskell 尝试解决一下，以求近距离的感受下函数之美。
+问题 这里采用的是我司一个废弃了很久的面试题目 MarsRover，题目内容如下：
  A squad of robotic rovers are to be landed by NASA on a plateau on Mars. This plateau, which is curiously rectangular, must be navigated by the rovers so that their on-board cameras can get a complete view of the surrounding terrain to send back to Earth. A rover&amp;rsquo;s position and location is represented by a combination of x and y co-ordinates and a letter representing one of the four cardinal compass points.</description>
     </item>
     
@@ -226,11 +222,10 @@ run :: Maybe Command -&amp;gt; MarsRover -&amp;gt; MarsRover run command rover =
       
       <guid>https://ddou.github.io/posts/functional-programming-concepts-part-two/</guid>
       <description>上一篇提到了函数式编程语言的两个特点。这里书接上回，我们继续探讨函数式编程语言的其他特点。
-尾递归 递归是我们在编程中处理集合时经常用的到的一个技巧，使用递归相对于循环来说可以更容易的实现功能。比如说求一个整数num的阶乘，采用递归可以实现如下：
-private static Integer factorial(int num) { if (num == 1) { return 1; } return num * factorial(num - 1); } Integer result = factorial(10); // result = 3628800 上述递归的实现清晰易懂，结果正确。但是一个问题是，每当factorial调用自身时，如当num=8时，都会在调用堆栈上保存当前的执行上下文，当回调结束时以计算当前num(8)和factorial(7)的乘积。我们知道 每个程序在执行时，系统分配的堆栈大小都是有限制的。当回调足够多时，如num大，就可能出现堆栈溢出的错误。
+尾递归 递归是我们在编程中处理集合时经常用的到的一个技巧，使用递归相对于循环来说可以更容易的实现功能。比如说求一个整数 num 的阶乘，采用递归可以实现如下：
+private static Integer factorial(int num) { if (num == 1) { return 1; } return num * factorial(num - 1); } Integer result = factorial(10); // result = 3628800 上述递归的实现清晰易懂，结果正确。但是一个问题是，每当 factorial 调用自身时，如当 num=8 时，都会在调用堆栈上保存当前的执行上下文，当回调结束时以计算当前 num(8)和 factorial(7)的乘积。我们知道 每个程序在执行时，系统分配的堆栈大小都是有限制的。当回调足够多时，如 num 大，就可能出现堆栈溢出的错误。
 一个解决该问题的办法就是采用尾递归。比如采用尾递归的方式实现阶乘计算如下：
-private static Integer factorial2(int accu, int num) { if (num == 1) { return accu; } return factorial2(accu * num, num - 1); } Integer result = factorial2(1, 10); // result = 3628800 上述factorial2的实现中，中间的计算结果是以参数accu的方式传递给递归调用的函数，此时无需等递归函数调用结束再计算，故无需保存调用上下文，避免了堆栈操作，也就避免了因递归调用太多而导致的堆栈溢出问题。
-对集合进行操作是编程中的一个永恒主题。函数式编程语言中内置了许多对集合进行操作的函数，其中很多都是采用尾递归式的实现。如haskell中求阶乘:</description>
+private static Integer factorial2(int accu, int num) { if (num == 1) { return accu; } return factorial2(accu * num, num - 1); } Integer result = factorial2(1, 10); // result = 3628800 上述 factorial2 的实现中，中间的计算结果是以参数 accu 的方式传递给递归调用的函数，此时无需等递归函数调用结束再计算，故无需保存调用上下文，避免了堆栈操作，也就避免了因递归调用太多而导致的堆栈溢出问题。</description>
     </item>
     
     <item>
@@ -239,13 +234,11 @@ private static Integer factorial2(int accu, int num) { if (num == 1) { return ac
       <pubDate>Tue, 12 Jan 2016 21:07:54 +0800</pubDate>
       
       <guid>https://ddou.github.io/posts/functional-programming-concepts/</guid>
-      <description>函数式编程这几年变得越来越流行起来，越来越多的语音融入了函数式编程的语法，就连更新缓慢如Java也不例外，在Java8中引入了函数式编程的语法。JVM平台的后起之秀Scala，Groovy更是出生之初就有内置了对函数式编程的支持。作为最经常被拿来与Java做比较的C#，更是抢先一步在.NET 3.5版本时就有了对函数式编程的支持。后来.NET平台上更是直接引入了函数式编程语言F#。
+      <description>函数式编程这几年变得越来越流行起来，越来越多的语音融入了函数式编程的语法，就连更新缓慢如 Java 也不例外，在 Java8 中引入了函数式编程的语法。JVM 平台的后起之秀 Scala，Groovy 更是出生之初就有内置了对函数式编程的支持。作为最经常被拿来与 Java 做比较的 C#，更是抢先一步在.NET 3.5 版本时就有了对函数式编程的支持。后来.NET 平台上更是直接引入了函数式编程语言 F#。
 函数式编程的兴起并非没有原因。
- 函数式编程语言一般极具表现力. 相比主流的面向对象语言能以极少的代码完成相同的工作。与代码量的减少相对应的就是维护成本的降低。 相对于命令式编程，函数式编程语言都是采用声明式编程的方式，能在更高的抽象级别上编程，代码更易于理解。 **纯函数是没有副作用的，既不会修改全局状态，也不会修改传入的参数。**在进行多线程编程时，就从根本上避免死锁，活锁或者是线程饥饿的问题。  函数式编程语言的特征 高阶函数 在函数式编程语言中，函数终于成为一等公民，可以跟变量一样作为参数传递，同时也可以作为函数返回值返回。这个功能带来的直接好处就是当我们需要传递行为的时候，不必在跟之前一样为了传递行为而引入一个对象。例如在Java 8之前，当我们想排序一个List时：
-List&amp;lt;Integer&amp;gt; values = newArrayList(11, 2, 43, 14, 5, 76, 6); Collections.sort(values, new Comparator&amp;lt;Integer&amp;gt;() { @Override public int compare(Integer one, Integer other) { return one.compareTo(other); } }); Java 8引入了Lambda之后，我们不必再引入一个对象来封装我们的排序逻辑：
-Collections.sort(values, (a, b) -&amp;gt; a.compareTo(b)); 本质上讲，传递进来的还是一个对象，只不过是因为Functional Interface的存在，我们可以假装传入的是一个函数。这一点在我们使用传入的对象时就更为明显: 我们不得不像使用对象一样通过调用apply方法来应用传入的函数。
-public static &amp;lt;T&amp;gt; T create(String stringValue, Function&amp;lt;String, T&amp;gt; instantiator) { return instantiator.apply(stringValue); } 在纯粹的函数式编程语言中，高阶函数的使用则更为自然， 如在haskell中，
-add :: a -&amp;gt; a -&amp;gt; a add a b = a + b perform :: a -&amp;gt; a -&amp;gt; (a -&amp;gt; a -&amp;gt; a) -&amp;gt; a perform a b action = action a b let result = perform 1 1 add // result = 2 既然函数可以作为参数传递，也可以作为返回值，那么函数之间的运算也就不足为奇了。以下是Haskell中用来组合（compose）函数的函数(对，这里没有写错，就是通过组合函数来生成更强大函数)。</description>
+ 函数式编程语言一般极具表现力. 相比主流的面向对象语言能以极少的代码完成相同的工作。与代码量的减少相对应的就是维护成本的降低。 相对于命令式编程，函数式编程语言都是采用声明式编程的方式，能在更高的抽象级别上编程，代码更易于理解。 **纯函数是没有副作用的，既不会修改全局状态，也不会修改传入的参数。**在进行多线程编程时，就从根本上避免死锁，活锁或者是线程饥饿的问题。  函数式编程语言的特征 高阶函数 在函数式编程语言中，函数终于成为一等公民，可以跟变量一样作为参数传递，同时也可以作为函数返回值返回。这个功能带来的直接好处就是当我们需要传递行为的时候，不必在跟之前一样为了传递行为而引入一个对象。例如在 Java 8 之前，当我们想排序一个 List 时：
+List&amp;lt;Integer&amp;gt; values = newArrayList(11, 2, 43, 14, 5, 76, 6); Collections.sort(values, new Comparator&amp;lt;Integer&amp;gt;() { @Override public int compare(Integer one, Integer other) { return one.compareTo(other); } }); Java 8 引入了 Lambda 之后，我们不必再引入一个对象来封装我们的排序逻辑：
+Collections.sort(values, (a, b) -&amp;gt; a.compareTo(b)); 本质上讲，传递进来的还是一个对象，只不过是因为 Functional Interface 的存在，我们可以假装传入的是一个函数。这一点在我们使用传入的对象时就更为明显: 我们不得不像使用对象一样通过调用 apply 方法来应用传入的函数。</description>
     </item>
     
     <item>
@@ -254,7 +247,7 @@ add :: a -&amp;gt; a -&amp;gt; a add a b = a + b perform :: a -&amp;gt; a -&amp;
       <pubDate>Sun, 10 Jan 2016 23:24:57 +0800</pubDate>
       
       <guid>https://ddou.github.io/posts/continuous-integration-introduction/</guid>
-      <description>近期客户到访，按客户要求，做了持续集成方面的session分享。持续集成在ThoughtWorks每个项目中算是标准配置，必不可少，自己所在项目持续集成也是做的风生水起。正好依此为契机，总结下过去在持续集成方面的知识。有兴趣的朋友，可以参考持续集成简介。
+      <description>近期客户到访，按客户要求，做了持续集成方面的 session 分享。持续集成在 ThoughtWorks 每个项目中算是标准配置，必不可少，自己所在项目持续集成也是做的风生水起。正好依此为契机，总结下过去在持续集成方面的知识。有兴趣的朋友，可以参考持续集成简介。
 欢迎探讨。</description>
     </item>
     
@@ -298,14 +291,12 @@ public class BuildingFeatures { public BuildingFeatures(); Code: 0: aload_0 1: i
       <pubDate>Sat, 08 Mar 2014 22:44:00 +0800</pubDate>
       
       <guid>https://ddou.github.io/posts/meaningful-rspec-predicate/</guid>
-      <description>Ruby作为动态语言，以其灵活性在测试领域大放异彩。RSpec作为Ruby中使用最广泛的测试工具之一，实在是广大码农们居家旅行测试验证之必备神器。RSpec提供了强大灵活的验证器(mather)，使用这些验证器加上Ruby灵活的语法可以写出类似于自然语言的验证，例如：
-result_list.should include(item) result.should equal(item) person.name.should == &amp;#39;ddou&amp;#39; 上述验证写法自然看起来赏心悦目，但如下的写法就太不ruby了，估计rubyist看到了多少会有些反胃：
-person.manager?.should be_true detail_view.toggleable?.should == true detail_view.has_photo?.should == true 对于上述验证，一个rubyist所喜闻乐见的验证写法应该是这样的：
-person.should be_manager detail_view.should be_toggleable detail_view.should have_photo 这样的写法是不是看起来更自然，更符合人类自然语言的习惯？强大如RSpec者自然支持上述语法。RSpec提供了对Predicate Matcher的支持，即可以使用被验证对象自身提供的predicate方法作为验证器。 常见的predicate方法如Array.empty?，以及我们上面例子中的 Person.manager?，DetailView.toggleable?，DetailView.has_photo?等。
-Predicate Matcher实现 下面我们就打开RSpec源码，看看Predicate Matcher是如何实现。
-上例中我们并没有定义be_manager，be_toggleable方法，RSpec自然要依赖Ruby的强大元编程能力来实现魔法。打开rspec-expectation包下lib/rspec/matchers/method_missing.rb文件，我们可以看到如下逻辑：
-def method_missing(method, *args, &amp;amp;block) return Matchers::BuiltIn::BePredicate.new(method, *args, &amp;amp;block) if method.to_s =~ /^be_/ return Matchers::BuiltIn::Has.new(method, *args, &amp;amp;block) if method.to_s =~ /^have_/ super end 以上例中be_manager为例，此情况下RSpec会创建一个Matchers::BuiltIn::BePredicate实例，should会使用该BePredicate来验证我们的期望值。下面我们顺藤摸瓜看下BePredicate是如何工作的：
- 解析出验证使用的Predicate方法的名字，$3返回即是。对于上例中be_manager，此处返回&amp;quot;manager&amp;quot;。  def prefix_and_expected(symbol) symbol.to_s =~ /^(be_(an?_)?)(.*)/ return $1, $3 end  将上述方法名字转化为实际使用的Predicate方法对应的符号（Symbol）。根据时态的不同，还会在Predicate方法名后添加s。  def predicate &amp;#34;#{@expected}?</description>
+      <description>Ruby 作为动态语言，以其灵活性在测试领域大放异彩。RSpec 作为 Ruby 中使用最广泛的测试工具之一，实在是广大码农们居家旅行测试验证之必备神器。RSpec 提供了强大灵活的验证器(mather)，使用这些验证器加上 Ruby 灵活的语法可以写出类似于自然语言的验证，例如：
+result_list.should include(item) result.should equal(item) person.name.should == &amp;#39;ddou&amp;#39; 上述验证写法自然看起来赏心悦目，但如下的写法就太不 ruby 了，估计 rubyist 看到了多少会有些反胃：
+person.manager?.should be_true detail_view.toggleable?.should == true detail_view.has_photo?.should == true 对于上述验证，一个 rubyist 所喜闻乐见的验证写法应该是这样的：
+person.should be_manager detail_view.should be_toggleable detail_view.should have_photo 这样的写法是不是看起来更自然，更符合人类自然语言的习惯？强大如 RSpec 者自然支持上述语法。RSpec 提供了对 Predicate Matcher 的支持，即可以使用被验证对象自身提供的 predicate 方法作为验证器。 常见的 predicate 方法如 Array.empty?，以及我们上面例子中的 Person.manager?，DetailView.toggleable?，DetailView.has_photo?等。
+Predicate Matcher 实现 下面我们就打开 RSpec 源码，看看 Predicate Matcher 是如何实现。
+上例中我们并没有定义 be_manager，be_toggleable 方法，RSpec 自然要依赖 Ruby 的强大元编程能力来实现魔法。打开 rspec-expectation 包下 lib/rspec/matchers/method_missing.rb 文件，我们可以看到如下逻辑：</description>
     </item>
     
   </channel>

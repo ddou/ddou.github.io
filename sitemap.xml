@@ -122,6 +122,9 @@
     <loc>https://ddou.github.io/posts/thoughts-on-a-null-pointer-exception/</loc>
     <lastmod>2014-10-26T16:19:35+08:00</lastmod>
   </url><url>
+    <loc>https://ddou.github.io/tags/rspec/</loc>
+    <lastmod>2014-03-08T22:44:00+08:00</lastmod>
+  </url><url>
     <loc>https://ddou.github.io/posts/meaningful-rspec-predicate/</loc>
     <lastmod>2014-03-08T22:44:00+08:00</lastmod>
   </url><url>
@@ -129,6 +132,9 @@
     <lastmod>2014-03-08T22:44:00+08:00</lastmod>
   </url><url>
     <loc>https://ddou.github.io/tags/test/</loc>
+    <lastmod>2014-03-08T22:44:00+08:00</lastmod>
+  </url><url>
+    <loc>https://ddou.github.io/tags/unit-test/</loc>
     <lastmod>2014-03-08T22:44:00+08:00</lastmod>
   </url>
 </urlset>
