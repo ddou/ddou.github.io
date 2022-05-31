@@ -88,6 +88,8 @@ img {
   border-radius: 2px;
   max-width: 100%;
   height: auto;
+  display: block;
+  margin: 1rem auto;
 }
 
 table {
