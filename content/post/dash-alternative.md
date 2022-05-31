@@ -2,6 +2,9 @@
 date: "2016-04-08T22:13:23+08:00"
 title: "一个Dash的替代解决方案"
 tags: ["Tools"]
+keywords:
+  ["工具分享", "dash", "文档查看", "编程", "DevDocs", "Electron", "github"]
+description: "分享了一个开源项目，使用 Electron 包裹了 DevDocs.io, 方便本地查看 API 文档，可以作为 Dash 的替代品。"
 ---
 
 作为一个合格的码农，都与自己的工具箱。

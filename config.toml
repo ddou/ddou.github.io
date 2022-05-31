@@ -4,6 +4,7 @@ title = "子不语"
 theme = "contrast-hugo"
 enableRobotsTXT = true
 canonifyURLs = true
+description = "记录生活感悟，工作心得。"
 
 [taxonomies]
   tag = "tags"
@@ -12,7 +13,7 @@ canonifyURLs = true
   post = "/posts/:filename/"
 
 [params]
-  description = "Some description"
+  description = "dytes 的个人博客，记录生活感悟，工作心得"
   disqusShortname = "dytes"
   contentBackgroundColor = "#fff"
   contentTextColor = "#212529"

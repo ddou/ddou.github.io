@@ -3,6 +3,8 @@ title: "[译文]再谈CAP理论"
 date: "2017-05-09T23:58:10+08:00"
 comments: true
 tags: ["Architecture", "Distributed System", "Translation"]
+keywords: ["CAP", "分布式系统", "Distributed System", "架构"]
+description: "分布式系统中 CAP 是被经常讨论的一个理论。本篇翻译了 http://robertgreiner.com/2014/08/cap-theorem-revisited/。原文中对 CAP 以及其场景做了很精准的描述。"
 ---
 
 最近在看分布式相关文章时，偶遇[该篇文章](http://robertgreiner.com/2014/08/cap-theorem-revisited/)，文章虽简短，但分析透彻, 故译来与大家分享，希望能读者有帮助。

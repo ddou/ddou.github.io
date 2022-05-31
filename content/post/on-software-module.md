@@ -4,7 +4,7 @@ date: 2020-04-21T22:50:34+08:00
 publishdate: 2020-04-22
 lastmod: 2020-04-22
 tags: ["Design", "OO", "Java", "Architecture"]
-description: "面向对象 模块设计"
+description: "面向对象设计与模块设计"
 keywords: ["面向对象设计", "模块化"]
 ---
 

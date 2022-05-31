@@ -2,6 +2,8 @@
 date = "2015-12-20T00:01:32+08:00"
 title = "你应该知道的Gmail"
 tags = ["Efficiency"]
+keywords = ["Efficiency","Gmail","工具","分享"]
+description = "分享了 Gmail 使用的一些小技巧，如自定义收件箱、设置 Gmail Filter 以及快捷键操作等。"
 +++
 
 平日工作都是使用 Gmail 作为主力邮箱。虽然网页版因为要频繁登录，而多有不便，但在尝试了多种邮件客户端后，终究还是因为怀念 Gmail 网页版的强大功能，继续使用网页版。趁这个周末忙里偷得半日闲，暂且记录下自己在使用 Gmail 时的一些心得。
