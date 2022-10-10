@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<title>你了解手里的锤子吗？ | 子不语</title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.90.1" />
+<meta name="description" content="了解实践、工具选择背后的原则、需求，正确的在工作中应用这些实践和工具">
+<meta name="baidu-site-verification" content="AAd4ZRAjIO">
+<meta name="keywords" content="Consulting">
+<meta name="robots" content="index,follow"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://ddou.github.io/css/minimal.css">
+<link rel="canonical" href="https://ddou.github.io/posts/know-your-tools/">
+<link rel="alternate" type="application/rss+xml" href="" title="子不语">
+
+<header>
+  
+    <a href="https://ddou.github.io/" class="title">子不语</a>
+  
+  
+    <nav>
+    
+      <a href="https://ddou.github.io/">文章</a>
+    
+      <a href="https://ddou.github.io/tags/">标签</a>
+    
+      <a href="https://ddou.github.io/about/">关于</a>
+    
+      <a href="https://ddou.github.io/index.xml">订阅</a>
+    
+    </nav>
+  
+</header>
+
+<article>
+  <header>
+    <h1>你了解手里的锤子吗？</h1>
+    <time
+      datetime="2022-10-10T18:10:17&#43;08:00">October 10, 2022</time>
+      
+
+<small><code><a href="https://ddou.github.io/tags/consulting">Consulting</a></code></small>
+
+  </header>
+  <p><img src="https://ddou.github.io/image/hammer.jpeg" alt="hammer"></p>
+<h1 id="一次代码评审">一次代码评审</h1>
+<p>  在一个风和日丽的下午，团队正在进行每日代码评审。小 A 对着大屏幕上的代码说了句：“稍微停下， 我们这里是不是应该把<code>if</code>改写成守卫语句的方式？”。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 示意代码
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">doStuff</span><span style="color:#f92672">(</span>String input<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span> someCheck<span style="color:#f92672">(</span>input<span style="color:#f92672">)</span> <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        operation1<span style="color:#f92672">(</span>input<span style="color:#f92672">);</span>
+        operation2<span style="color:#f92672">(</span>input<span style="color:#f92672">);</span>
+        operation3<span style="color:#f92672">(</span>input<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>   
+<span style="color:#f92672">}</span>
+</code></pre></div><p>  这是一个很简短的方法，方法体除去<code>if</code>外，只有 3 行业务逻辑，貌似的确没有重构的必要。“就一个 5 行的方法，这样修改有什么意义呢？”，小 C 疑惑的问起来。</p>
+<p>  “这样写，未来如果再添加新的<code>if</code>判断，会形成<code>if</code>嵌套循环的时候，造成代码不好阅读，还是使用守卫语句比较好，这也是《重构》那本书里推荐的处理方法。” 小 A坚持着自己的建议。</p>
+<p>  “但这个方法并没有嵌套呀，也不影响阅读，现在进行这个改动，不是很有价值吧”，小 C 不太不赞同这个改动。</p>
+<p>  类似这样的对话在日常的代码评审中经常会出现，可能是在这里建议我们提取一个工具方法以方便未来使用，或者是在那里建议使用某个设计模式。但他们都有相似点，这些建议本身都没有错，而且在某些场景下是非常有必要的，只是在当下这个场景却有些不合时宜，也没有太大价值。</p>
+<h1 id="哪一把的锤子">哪一把的锤子</h1>
+<p>   在多年的工作中，我们学习到了很多编程技巧、业界最佳实践，以及模式等，并在不经意间就凭直觉应用在每个功能中，或者作为建议输出在代码评审中。 这些动作就像我们下意识的呼吸、或者开车时踩油门和刹车一样，不用经过大脑的过多思考。但就像上面发生在上面代码评审中的一样，场景不同，一个本来正确的做法可能就变成了正确但无价值的建议。</p>
+<p>   不同的重构技巧是在解决不同的代码坏味道，不同的架构风格是在解决不同场景下的问题。那怎么知道哪个锤子对应在哪个钉子上呢？ 这就需要拨开重重表象迷雾，回归到问题的根源，也就是想马斯克一样，使用第一性原理从源头思考问题。</p>
+<p>   以上面代码评审的为例子：如何评价一段代码的优劣呢？ 我们可以遵循下面的原则：</p>
+<ul>
+<li>功能是否被正确的实现？</li>
+<li>是否遵循了系统目前的设计实现方式？</li>
+<li>是否增加了系统的认知负荷？</li>
+<li>当发生变化时，是否容易修改？</li>
+</ul>
+<p>当我们以这样的原则去审视上面的代码时，发现它的确没有重构的必要。</p>
+<p>当我们采用某个实践、工具时，总是应该思考背后要遵循的原则，要达到的目的，以及最初的需求。</p>
+<h1 id="结局">结局</h1>
+<p>   “我理解你的意思，防卫语句在解决嵌套<code>if</code>的场景下，的确比较有价值，能让代码更容易阅读和维护。但是在这个方法里，的确没有必要，因为方法本身比较短小，功能正确，实现也清晰明了，建议目前保存现状。如果这个方法下次被改动，并且有出现<code>if</code>嵌套时，再修改为防卫语句吧。” 小 C 总结道。</p>
+
+</article>
+
+<script src="https://utteranc.es/client.js"
+        repo="ddou/ddou.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+<style>
+    div.utterances {
+        max-width: 80%;
+        width: 60%;
+    }
+</style>
+
+<script>
+    (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-40664887-1' , { 'siteSpeedSampleRate': 100 });
+    ga('send', 'pageview');
+    ga('set', 'anonymizeIp', true);
+</script>
+
+
+
+</html>

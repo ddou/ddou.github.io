@@ -6,7 +6,16 @@
     <description>Recent content in Tags on 子不语</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 28 May 2022 18:01:31 +0800</lastBuildDate><atom:link href="https://ddou.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 10 Oct 2022 18:10:17 +0800</lastBuildDate><atom:link href="https://ddou.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Consulting</title>
+      <link>https://ddou.github.io/tags/consulting/</link>
+      <pubDate>Mon, 10 Oct 2022 18:10:17 +0800</pubDate>
+      
+      <guid>https://ddou.github.io/tags/consulting/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Java</title>
       <link>https://ddou.github.io/tags/java/</link>
@@ -94,15 +103,6 @@
       <pubDate>Mon, 30 Dec 2019 17:57:02 +0800</pubDate>
       
       <guid>https://ddou.github.io/tags/aws/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Consulting</title>
-      <link>https://ddou.github.io/tags/consulting/</link>
-      <pubDate>Tue, 23 Jul 2019 15:34:30 +0800</pubDate>
-      
-      <guid>https://ddou.github.io/tags/consulting/</guid>
       <description></description>
     </item>
     
